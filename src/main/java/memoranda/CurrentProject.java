@@ -53,10 +53,9 @@ public class CurrentProject {
         _tasklist = CurrentStorage.get().openTaskList(_project);
         _notelist = CurrentStorage.get().openNoteList(_project);
         _resources = CurrentStorage.get().openResourcesList(_project);
-        AppFrame.addExitListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                save();                                               
-            }
+        AppFrame.addExitListener(e -> {
+                save();
+                System.exit(0);
         });
     }
         
