@@ -1,4 +1,11 @@
+plugins {
+  // id "com.github.spotbugs" version "4.5.1"
+  id "checkstyle"
+}
 apply plugin: 'application'
+apply plugin: 'java'
+
+
 
 mainClassName = 'main/java/memoranda/Start'
 
@@ -14,3 +21,66 @@ dependencies {
   implementation 'net.sourceforge.nekohtml:nekohtml:1.9.+'
 }
 
+jar {
+  manifest {
+    attributes 'Main-Class': 'main.java.memoranda.Start'
+  }
+
+  from {
+    configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) }
+  }
+}
+
+task fatJar(type: Jar) {
+  manifest {
+    attributes 'Main-Class': 'main.java.memoranda.Start'
+  }
+  baseName = 'famandee_memoranda'
+  duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+  from { configurations.runtimeClasspath.collect { it.isDirectory() ? it : zipTree(it) } }
+  with jar
+}
+
+///////////////////////////////////////////////////////////////////////
+// Configure Checkstyle
+/////////////////////////////////////////////////////////////////////
+apply plugin: 'checkstyle'
+// checkstyle {
+//   // Keep checkstyle a little quieter
+//   ignoreFailures = true
+//   showViolations = false
+// }
+
+tasks.withType(Checkstyle) {
+
+  reports {
+    html.enabled = true
+    xml.enabled = false
+  }
+  // include '**/*.java'
+  include '**/ui/App.java'
+}
+
+checkstyle {
+  toolVersion = "8.8"
+}
+
+
+
+
+///////////////////////////////////////////////////////////////////////
+// Configure SpotBugs
+///////////////////////////////////////////////////////////////////////
+// To generate an HTML report instead of XML
+// spotbugsMain {
+//     reports {
+//         xml.enabled = false
+//         html.enabled = true
+//     }
+// }
+// spotbugs {
+//     toolVersion = '4.2.2'
+//     ignoreFailures = true
+//     showProgress = true
+//     effort = 'max'
+// }
