@@ -6,6 +6,9 @@
  * @author Alex V. Alishevskikh, alex@openmechanics.net
  * Copyright (c) 2003 Memoranda Team. http://memoranda.sf.net
  */
+ 
+ // Individual Setup, Task 1 (3/3)
+ 
 package main.java.memoranda;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
