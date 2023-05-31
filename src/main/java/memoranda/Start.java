@@ -14,6 +14,8 @@ import java.net.Socket;
 import main.java.memoranda.ui.*;
 import main.java.memoranda.util.Configuration;
 
+// individual setup, task 1 (1/3)
+
 /**
  *
  */
