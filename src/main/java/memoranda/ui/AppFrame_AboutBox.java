@@ -41,15 +41,20 @@ public class AppFrame_AboutBox extends JDialog implements ActionListener {
   			  "Jeremy Whitlock (jwhitlock@starprecision.com)"              
   };
   String othersHead = Local.getString("Other contributors") + ":";
-  String[] others = {
-              "Thomas Chuffart (informatique@pierrelouiscarlier.fr)",
+  String[] others = {  
+              "Aman Sharma (famandee@asu.edu)",
+              "Johnathan Ellis (jrellis8@asu.edu)",
+              "Joseph Okonoboh (bokonobo@asu.edu)",
+              "Paul Carmichael (pccarmic@asu.edu)",
+              "Ryan Dinaro (rdinaro@asu.edu)"
+              /*"Thomas Chuffart (informatique@pierrelouiscarlier.fr)",
               "Willy Dobe (wdobe@gmx.de)",
               "Yunjie Liu (liu-610@163.com)",
               "Kenneth J. Pouncey (kjpou@pt.lu)",
               "Michael Radtke (mradtke@abigale.de)",
               "Carel-J Rischmuller (carel-j.rischmuller@epiuse.com)",
               "Milena Vitali-Charewicz (milo22370@yahoo.com)",
-              "Toru Watanabe (t-wata@cablenet.ne.jp)"                            
+              "Toru Watanabe (t-wata@cablenet.ne.jp)"*/                            
  };
     
   JLayeredPane layeredPane;
