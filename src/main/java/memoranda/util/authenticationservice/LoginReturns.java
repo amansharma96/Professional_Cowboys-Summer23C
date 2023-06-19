@@ -1,4 +1,4 @@
-package memoranda.AuthenticationService;
+package memoranda.util.authenticationservice;
 
 /**
  * @Author Ryan Dinaro

@@ -1,4 +1,4 @@
-package memoranda.AuthenticationService;
+package memoranda.util.authenticationservice;
 
 
 import javax.crypto.*;

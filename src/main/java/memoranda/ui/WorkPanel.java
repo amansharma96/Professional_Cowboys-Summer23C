@@ -106,7 +106,7 @@ public class WorkPanel extends JPanel {
 		studentTrainerRegB.setContentAreaFilled(false);
 		studentTrainerRegB.setFocusPainted(false);
 		studentTrainerRegB.setHorizontalTextPosition(SwingConstants.CENTER);
-		studentTrainerRegB.setText(Local.getString("Members"));
+		studentTrainerRegB.setText(Local.getString("Trainers"));
 		studentTrainerRegB.setVerticalAlignment(SwingConstants.TOP);
 		studentTrainerRegB.setVerticalTextPosition(SwingConstants.BOTTOM);
 		studentTrainerRegB.addActionListener(new java.awt.event.ActionListener() {
@@ -248,7 +248,7 @@ public class WorkPanel extends JPanel {
 	}
 
 	private void studentTrainerRegB_actionPerformed(ActionEvent e) {
-		cardLayout1.show(panel, "DAILYITEMS");
+		cardLayout1.show(panel, "FILES");
 		dailyItemsPanel.selectPanel("REGISTRATION");
 		setCurrentButton(studentTrainerRegB);
 		Context.put("CURRENT_PANEL", "REGISTRATION");
