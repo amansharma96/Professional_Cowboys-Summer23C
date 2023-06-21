@@ -12,11 +12,10 @@ public class Student extends Member {
 
     /**
      * Initializes a student as a member of the gym, sets the trainer to unassigned trainer
-     * @param currentMember makes a member a student
+     * @param memberID initializes a member as a student
      */
-    public Student(Member currentMember) {
-        super(currentMember.getFirstName(),currentMember.getLastName(),currentMember.getJoinDate(),
-                currentMember.getMemberID(), currentMember.hasActiveMembership());
+    public Student(int memberID) {
+        super(Member.lookupMember(memberID));
     }
 
     /**

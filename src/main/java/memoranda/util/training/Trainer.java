@@ -21,7 +21,7 @@ public class Trainer extends Member {
 
     public Trainer(Member currentMember, int minimumSessionTime) {
         super(currentMember.getFirstName(),currentMember.getLastName(),currentMember.getJoinDate(),
-                currentMember.getMemberID(), currentMember.hasActiveMembership());
+                currentMember.getMemberID(), currentMember.getActiveMembership());
         studentList = new HashSet<Integer>();
         availableTimes = new ArrayList<TimeSlot>();
         this.minimumSessionTime = minimumSessionTime;
