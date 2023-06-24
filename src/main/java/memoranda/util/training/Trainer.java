@@ -1,10 +1,8 @@
 package memoranda.util.training;
 
 import java.awt.Point;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Scanner;
+import java.io.*;
+import java.util.*;
 
 /**
  * @Author Ryan Dinaro
@@ -12,17 +10,20 @@ import java.util.Scanner;
  * It stores the list of students training with them and what times are available
  */
 public class Trainer extends Member {
-    private final HashSet<Integer> studentList;
+    private static final HashMap<Integer, ArrayList<Student>> trainerData = new HashMap<Integer, ArrayList<Student>>();
 
     private final ArrayList<TimeSlot> availableTimes;
     private static final int MINUTES_IN_DAYS = 1440;
     private int minimumSessionTime; //how short a session can be booked for
 
+    static {
+        populateList(); //populates the list on compile time
+    }
 
     public Trainer(Member currentMember, int minimumSessionTime) {
         super(currentMember.getFirstName(),currentMember.getLastName(),currentMember.getJoinDate(),
                 currentMember.getMemberID(), currentMember.getActiveMembership());
-        studentList = new HashSet<Integer>();
+        trainerData.put(getMemberID(),new ArrayList<Student>());
         availableTimes = new ArrayList<TimeSlot>();
         this.minimumSessionTime = minimumSessionTime;
     }
@@ -30,38 +31,71 @@ public class Trainer extends Member {
     /**
      * @param availableTime the timeslot available
      */
-    public void setAvailableTime(TimeSlot availableTime) {
+    public void addAvailableTime(TimeSlot availableTime) {
         this.availableTimes.add(availableTime);
     }
-    public HashSet<Integer> getStudentList() {
-        if(studentList.size()==0)
-            populateList();
-        return studentList;
+
+    public ArrayList<Student> getStudentList() {
+        return trainerData.get(getMemberID());
     }
 
     public boolean addStudent(Student student) {
         if(student==null)
             return false;
-        if(studentList.size()==0)
-            populateList();
-
-        return this.studentList.add(student.getMemberID());
+        return trainerData.get(getMemberID()).add(student);
     }
     public boolean removeStudent(Student student) {
         if(student==null)
             return false;
-        if(studentList.size()==0)
-            populateList();
-        return this.studentList.remove(student.getMemberID());
+        return trainerData.get(getMemberID()).remove(student);
     }
 
-    private void populateList() {
-        Scanner scan = new Scanner("logs/trainerDatabase");
-        while(scan.hasNextLine()) {
-            while (scan.hasNextInt()) {
-                studentList.add(scan.nextInt());
+    private static void populateList() {
+        FileInputStream fileInputStream = null;
+        ObjectInputStream objectInputStream = null;
+        BufferedReader bufferedReader = null;
+        File trainerFile = new File("logs/trainerDatabase");
+        try {
+            fileInputStream = new FileInputStream(trainerFile);
+            objectInputStream = new ObjectInputStream(fileInputStream);
+            bufferedReader = new BufferedReader(new InputStreamReader(objectInputStream));
+
+        } catch (FileNotFoundException e) {
+            //File not found
+            try {
+                //Create a file and return no need to populate list
+                if(trainerFile.createNewFile()) {
+                    return;
+                }
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
             }
-            scan.nextLine();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        String line = "";
+
+        try {
+            while((line = bufferedReader.readLine())!=null) {
+                //Read Trainer ID
+                if(!trainerData.containsKey(Integer.parseInt(line))) {
+                    trainerData.put(Integer.parseInt(line), new ArrayList<Student>());
+                    trainerData.get(Integer.parseInt(line)).add((Student) objectInputStream.readObject());
+
+                }
+                else {
+                    trainerData.get(Integer.parseInt(line)).add((Student) objectInputStream.readObject());
+                }
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            Objects.requireNonNull(fileInputStream).close();
+            Objects.requireNonNull(objectInputStream).close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -74,8 +108,6 @@ public class Trainer extends Member {
     }
 
     public HashMap<Point, Boolean> getTimesFree() {
-        if(studentList.size()==0)
-            populateList();
         HashMap<Point, Boolean> isAvailable = new HashMap<Point, Boolean>();
 
         for(TimeSlot slot : availableTimes) {
@@ -89,8 +121,7 @@ public class Trainer extends Member {
             }
         }
 
-        for(Integer studentID : studentList) {
-            Student student = (Student) lookupMember(studentID);
+        for(Student student : getStudentList()) {
             assert student != null;
             int x = student.getTimeSlot().getDay().getDayID();
             double minutesAvailable = student.getTimeSlot().getHourEnd()* 60 + student.getTimeSlot().getMinuteEnd() +

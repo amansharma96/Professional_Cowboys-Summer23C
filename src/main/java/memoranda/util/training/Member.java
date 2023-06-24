@@ -10,8 +10,8 @@ import java.util.*;
  */
 public class Member{
     private String firstName, lastName;
-    private final String joinDate;
-    private final int memberID;
+    private String joinDate;
+    private int memberID;
     private boolean activeMembership;
     private static final SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
     public static HashMap<Integer, Member> MemberList = new HashMap<Integer, Member>();
@@ -46,6 +46,10 @@ public class Member{
         this.activeMembership = true;
         MemberList.put(memberID,this);
         saveInformation(true);
+    }
+
+    public Member() {
+
     }
 
     /**
