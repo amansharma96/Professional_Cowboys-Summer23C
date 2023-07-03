@@ -1,6 +1,7 @@
 package memoranda.util.training;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -12,13 +13,17 @@ import java.util.Objects;
 public class Student extends Member implements Serializable {
     private Trainer currentTrainer;
     private TimeSlot trainingTime;
-    public static HashMap<Integer, Student> studentList;
+    public static ArrayList<Integer> studentList;
 
     static {
-        studentList = new HashMap<Integer, Student>();
+        studentList = new ArrayList<Integer>();
         populateList();
     }
-    public Student() {
+
+    /**
+     * Private constructor for serialization
+     */
+    private Student() {
         super();
     }
     private static void populateList() {
@@ -44,22 +49,11 @@ public class Student extends Member implements Serializable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
         try {
-            while(true) {
-                Student readStudent = (Student) Objects.requireNonNull(objectInputStream).readObject();
-                studentList.put(readStudent.getMemberID(), readStudent);
-            }
+            studentList = (ArrayList<Integer>) Objects.requireNonNull(objectInputStream).readObject();
         } catch (EOFException e) {
             //End of stream
         } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-
-        try {
-            Objects.requireNonNull(fileInputStream).close();
-            Objects.requireNonNull(objectInputStream).close();
-        } catch (IOException e) {
             throw new RuntimeException(e);
         }
 
@@ -71,8 +65,8 @@ public class Student extends Member implements Serializable {
      */
     public Student(int memberID) {
         super(memberID);
-        if(!studentList.containsKey(memberID)) {
-            studentList.put(memberID, this);
+        if(!studentList.contains(memberID)) {
+            studentList.add(memberID);
         }
     }
 
@@ -117,11 +111,18 @@ public class Student extends Member implements Serializable {
         return this.trainingTime;
     }
 
-    public boolean saveStudent(boolean keepOldFiles){
+    /**
+     * Saves the students. If not called, students will be saved
+     * @return true if successful
+     */
+    public static boolean saveStudents() {
         try {
-            FileOutputStream studentWriter = new FileOutputStream("logs/studentDatabase.txt", keepOldFiles);
+            FileOutputStream studentWriter = new FileOutputStream("logs/studentDatabase.txt", false);
             ObjectOutputStream obj = new ObjectOutputStream(studentWriter);
-            obj.writeObject(this);
+
+            // Write the entire studentList to the file
+            obj.writeObject(studentList);
+
             obj.close();
         } catch (IOException e) {
             return false;

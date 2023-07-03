@@ -2,8 +2,10 @@ import org.apache.tools.ant.filters.ReplaceTokens
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
-apply plugin: 'application'
-apply plugin: 'java'
+plugins {
+  id 'java'
+  id 'application'
+}
 
 mainClassName = 'main/java/memoranda/Start'
 
@@ -16,7 +18,11 @@ repositories {
 dependencies {
   implementation 'com.io7m.xom:xom:1.2.+'
   implementation 'net.sourceforge.nekohtml:nekohtml:1.9.+'
+  implementation 'org.junit.jupiter:junit-jupiter:5.8.1'
 }
+
+
+
 
 // Get the current date and time as a string
 def now = LocalDateTime.now()

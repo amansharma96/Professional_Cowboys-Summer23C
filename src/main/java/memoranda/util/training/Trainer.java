@@ -17,7 +17,52 @@ public class Trainer extends Member {
     private int minimumSessionTime; //how short a session can be booked for
 
     static {
-        populateList(); //populates the list on compile time
+        FileInputStream fileInputStream = null;
+        ObjectInputStream objectInputStream = null;
+        BufferedReader bufferedReader = null;
+        File trainerFile = new File("logs/trainerDatabase");
+        try {
+            fileInputStream = new FileInputStream(trainerFile);
+            objectInputStream = new ObjectInputStream(fileInputStream);
+            bufferedReader = new BufferedReader(new InputStreamReader(objectInputStream));
+
+        } catch (FileNotFoundException e) {
+            //File not found
+            try {
+                //Create a file and return no need to populate list
+                if(!trainerFile.createNewFile()) {
+                    throw new FileNotFoundException("Unable to connect to file system");
+                }
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        String line = "";
+
+        try {
+            while((line = bufferedReader.readLine())!=null) {
+                //Read Trainer ID
+                if(!trainerData.containsKey(Integer.parseInt(line))) {
+                    trainerData.put(Integer.parseInt(line), new ArrayList<Student>());
+                    trainerData.get(Integer.parseInt(line)).add((Student) objectInputStream.readObject());
+
+                }
+                else {
+                    trainerData.get(Integer.parseInt(line)).add((Student) objectInputStream.readObject());
+                }
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            Objects.requireNonNull(fileInputStream).close();
+            Objects.requireNonNull(objectInputStream).close();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public Trainer(Member currentMember, int minimumSessionTime) {
@@ -51,52 +96,7 @@ public class Trainer extends Member {
     }
 
     private static void populateList() {
-        FileInputStream fileInputStream = null;
-        ObjectInputStream objectInputStream = null;
-        BufferedReader bufferedReader = null;
-        File trainerFile = new File("logs/trainerDatabase");
-        try {
-            fileInputStream = new FileInputStream(trainerFile);
-            objectInputStream = new ObjectInputStream(fileInputStream);
-            bufferedReader = new BufferedReader(new InputStreamReader(objectInputStream));
 
-        } catch (FileNotFoundException e) {
-            //File not found
-            try {
-                //Create a file and return no need to populate list
-                if(trainerFile.createNewFile()) {
-                    return;
-                }
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
-        String line = "";
-
-        try {
-            while((line = bufferedReader.readLine())!=null) {
-                //Read Trainer ID
-                if(!trainerData.containsKey(Integer.parseInt(line))) {
-                    trainerData.put(Integer.parseInt(line), new ArrayList<Student>());
-                    trainerData.get(Integer.parseInt(line)).add((Student) objectInputStream.readObject());
-
-                }
-                else {
-                    trainerData.get(Integer.parseInt(line)).add((Student) objectInputStream.readObject());
-                }
-            }
-        } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-        try {
-            Objects.requireNonNull(fileInputStream).close();
-            Objects.requireNonNull(objectInputStream).close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     public int getMinimumSessionTime() {

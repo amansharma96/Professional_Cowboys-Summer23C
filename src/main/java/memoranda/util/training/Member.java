@@ -20,7 +20,33 @@ public class Member{
      * On compile, populates the MemberList from the save file
      */
     static {
-        populateMemberList();
+        File file = new File("logs/memberDatabase");
+        if (!file.exists()) {
+            try {
+                file.createNewFile();
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        try {
+            Scanner memberPopulate = new Scanner(file);
+            memberPopulate.useDelimiter(" ");
+            if(memberPopulate.hasNextLine()) {
+                while (memberPopulate.hasNextLine()) {
+                    String firstName = memberPopulate.nextLine();
+                    String lastName = memberPopulate.nextLine();
+                    String joinDate = memberPopulate.next();
+                    int memberID = Integer.parseInt(memberPopulate.next());
+                    boolean activeMembership = Boolean.parseBoolean(memberPopulate.nextLine());
+                    if(firstName!=null&&lastName!=null&&joinDate!=null) {
+                        MemberList.put(memberID, new Member(firstName,lastName,joinDate,memberID,activeMembership));
+                    }
+                }
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("File not found.");
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -108,39 +134,6 @@ public class Member{
             logWriter.close();
         } catch (IOException e) {
             throw new RuntimeException(e);
-        }
-    }
-
-    /**
-     * populates the MemberList with all the memberIDs in the database
-     */
-    private static void populateMemberList() {
-        File file = new File("logs/memberDatabase");
-        if (!file.exists()) {
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        try {
-            Scanner memberPopulate = new Scanner(file);
-            memberPopulate.useDelimiter(" ");
-            if(memberPopulate.hasNextLine()) {
-                while (memberPopulate.hasNextLine()) {
-                    String firstName = memberPopulate.nextLine();
-                    String lastName = memberPopulate.nextLine();
-                    String joinDate = memberPopulate.next();
-                    int memberID = Integer.parseInt(memberPopulate.next());
-                    boolean activeMembership = Boolean.parseBoolean(memberPopulate.nextLine());
-                    if(firstName!=null&&lastName!=null&&joinDate!=null) {
-                        MemberList.put(memberID, new Member(firstName,lastName,joinDate,memberID,activeMembership));
-                    }
-                }
-            }
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found.");
-            e.printStackTrace();
         }
     }
 
