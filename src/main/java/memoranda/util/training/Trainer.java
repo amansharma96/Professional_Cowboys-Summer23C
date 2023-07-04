@@ -12,7 +12,8 @@ import java.util.*;
  */
 public class Trainer extends Member implements Serializable {
     private static final String FILE_PATH = "logs/trainerDatabase";
-    private final ArrayList<TimeSlot> availableTimes;
+    private final TreeSet<TimeSlot> availableTimes;
+
     private static final int MINUTES_IN_DAYS = 1440;
     private int minimumSessionTime; //how short a session can be booked for
     private final ArrayList<Student> studentList;
@@ -34,7 +35,7 @@ public class Trainer extends Member implements Serializable {
         if(!trainerList.contains(this))
             trainerList.add(this);
         this.minimumSessionTime = minimumSessionTime;
-        this.availableTimes = new ArrayList<TimeSlot>();
+        availableTimes = new TreeSet<>(new TimeSlotComparator());
     }
 
     /**
@@ -43,7 +44,7 @@ public class Trainer extends Member implements Serializable {
      */
     public boolean addAvailableTime(TimeSlot availableTime) {
         final int startHourAndMinute = 0;
-        TimeSlot fullDay = new TimeSlot(this, Day.UNDEFINED,
+        TimeSlot fullDay = new TimeSlot(this,null, Day.UNDEFINED,
                 startHourAndMinute-1,startHourAndMinute+1,MINUTES_IN_DAYS);
         if(checkValidTimeSlot(availableTime,fullDay) && !hasOverlap(availableTime)) {
             this.availableTimes.add(availableTime);
@@ -54,6 +55,12 @@ public class Trainer extends Member implements Serializable {
         }
     }
 
+    /**
+     * Puts a student in a valid time slot
+     * @param trainingSlot the requested time slot to fill
+     * @param student the student who wants to fill the slot
+     * @return true if added to the schedule
+     */
     public boolean fillTrainingSlot(TimeSlot trainingSlot, Student student) {
         studentList.add(student);
         TimeSlot trainerTime = null;
@@ -72,7 +79,8 @@ public class Trainer extends Member implements Serializable {
         //Separate the before TimeSlot, it is still available
         final double durationBetweenStarts = trainingSlot.getStartDoubleView()
                 - trainerTime.getStartDoubleView();
-        TimeSlot beforeTime = new TimeSlot(trainerTime.getMember(),trainerTime.getDay(),
+        TimeSlot beforeTime = new TimeSlot(trainerTime.getMember(),trainerTime.getTrainer(),
+                trainerTime.getDay(),
                 trainerTime.getHour(),trainerTime.getMinute(),(int) durationBetweenStarts);
         addAvailableTime(beforeTime);
 
@@ -85,7 +93,8 @@ public class Trainer extends Member implements Serializable {
         //Separate the after TimeSlot, it is still available
         final double newAfterDuration = trainerTime.getDurationInMinutes()-durationBetweenStarts
                 - trainingSlot.getDurationInMinutes();
-        TimeSlot afterTime = new TimeSlot(trainerTime.getMember(),trainerTime.getDay(),
+        TimeSlot afterTime = new TimeSlot(trainerTime.getMember(),trainerTime.getTrainer(),
+                trainerTime.getDay(),
                 trainingSlot.getEndHour(), trainingSlot.getEndMinute(),(int) newAfterDuration);
         addAvailableTime(afterTime);
 
@@ -188,5 +197,34 @@ public class Trainer extends Member implements Serializable {
     public void setMinimumSessionTime(int durationInMinutes) {
         this.minimumSessionTime = durationInMinutes;
         FileUtilities.saveList(FILE_PATH, trainerList);
+    }
+
+    /**
+     * Removes a student from a trainer
+     * @param student the student to be removed
+     * @return true if the student was removed
+     */
+    public boolean removeStudent(Student student) {
+        if(student==null||!studentList.contains(student)) {
+            return false;
+        } else {
+            studentList.remove(student);
+            rejoinTimeSlot(student.getTrainingSlot());
+            student.setTrainingTimeSlot(null,null);
+            student.setCurrentTrainer(null);
+        }
+        return true;
+    }
+
+    /**
+     * Rejoins adjacent time slots in availableTimes List
+     * that are less than the minimumSessionTime distance apart into
+     * one TimeSlot. Checks if slots are in the same day,
+     * then checks that the distance between the
+     * time is less than the minimum session time.
+     * @param trainingSlot the time slot to check for valid constraints
+     */
+    private void rejoinTimeSlot(TimeSlot trainingSlot) {
+
     }
 }

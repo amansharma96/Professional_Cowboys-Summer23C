@@ -50,7 +50,7 @@ class TrainerTest {
         final int testMinute = -1;
         final int duration = 30;
         boolean result = trainer.addAvailableTime(new TimeSlot(
-                trainer,testDay,testHour,testMinute,duration));
+                trainer,null, testDay,testHour,testMinute,duration));
         boolean expectedResult = false;
         assertEquals(result,expectedResult);
     }
@@ -61,7 +61,7 @@ class TrainerTest {
         final int testMinute = 0;
         final int duration = 30;
         boolean result = trainer.addAvailableTime(new TimeSlot(
-                trainer,testDay,testHour,testMinute,duration));
+                trainer,null, testDay,testHour,testMinute,duration));
         boolean expectedResult = false;
         assertEquals(result,expectedResult);
     }
@@ -73,7 +73,7 @@ class TrainerTest {
         final int testMinute = 0;
         final int duration = 1;
         boolean result = trainer.addAvailableTime(new TimeSlot(
-                trainer,testDay,testHour,testMinute,duration));
+                trainer,null, testDay,testHour,testMinute,duration));
         boolean expectedResult = false;
         assertEquals(result,expectedResult);
     }
@@ -85,9 +85,9 @@ class TrainerTest {
         final int testMinute = 0;
         final int duration = 1440;
         boolean result = trainer.addAvailableTime(new TimeSlot(
-                trainer,testDay,testHour,testMinute,duration));
+                trainer,null, testDay,testHour,testMinute,duration));
         boolean result2 = trainer.addAvailableTime(new TimeSlot(
-                trainer,testDay,testHour,testMinute,duration));
+                trainer,null, testDay,testHour,testMinute,duration));
         boolean expectedResult1 = true;
         boolean expectedResult2 = false;
         assertEquals(expectedResult1,result);
@@ -101,7 +101,7 @@ class TrainerTest {
         final int testMinute = 0;
         final int duration = 1440;
         final TimeSlot timeSlot = new TimeSlot(
-                trainer,testDay,testHour,testMinute,duration);
+                trainer,null, testDay,testHour,testMinute,duration);
         boolean result = trainer.addAvailableTime(timeSlot);
         boolean expectedResult1 = true;
         assertEquals(expectedResult1,result);
@@ -117,7 +117,7 @@ class TrainerTest {
         final int testMinute = 0;
         final int duration = 1440;
         final TimeSlot timeSlot = new TimeSlot(
-                trainer,testDay,testHour,testMinute,duration);
+                trainer,null, testDay,testHour,testMinute,duration);
         boolean result = trainer.addAvailableTime(timeSlot);
         boolean expectedResult1 = true;
         assertEquals(expectedResult1,result);
