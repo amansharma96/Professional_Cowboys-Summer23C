@@ -43,14 +43,4 @@ class StudentTest {
         student.setCurrentTrainer(trainer);
         Assertions.assertEquals(trainer, student.getCurrentTrainer());
     }
-
-    @org.junit.jupiter.api.Test
-    void getAndSetTimeSlot() {
-        final TimeSlot validTimeSlot = new TimeSlot(student,
-                Day.MONDAY,12,45,10);
-        final boolean result = student.setTimeSlot(validTimeSlot, trainer);
-        final boolean expectedResult = true;
-        Assertions.assertEquals(student.getTrainingSlot(), validTimeSlot);
-        Assertions.assertEquals(result,expectedResult);
-    }
 }

@@ -6,6 +6,7 @@ public class TimeSlot {
     private final int hour;
     private final int minute;
     private final int durationInMinutes;
+    private final int MINUTES_IN_HOUR = 60;
 
 
     /**
@@ -48,5 +49,20 @@ public class TimeSlot {
     public String toString() {
         return day.toString() + " " + hour + ":" + minute
                 + " duration: " + durationInMinutes + " minutes";
+    }
+
+    public int getEndHour() {
+        return hour + (int) Math.floor((double) (minute + durationInMinutes) / MINUTES_IN_HOUR);
+    }
+
+    public int getEndMinute() {
+        return (minute + durationInMinutes) % MINUTES_IN_HOUR;
+    }
+
+    public double getStartDoubleView() {
+        return hour + ((double) minute /MINUTES_IN_HOUR);
+    }
+    public double getEndDoubleView() {
+        return getEndHour() + ((double) getEndHour() /MINUTES_IN_HOUR);
     }
 }

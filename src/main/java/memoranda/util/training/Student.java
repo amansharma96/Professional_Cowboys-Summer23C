@@ -64,21 +64,10 @@ public class Student extends Member implements Serializable {
     /**
      * sets the time slots student will train in
      * @param trainingSlot the time slot the student will start training
-     * @param currentTrainer the trainer to be training with
-     * @return  false - if trainer is unavailable
-     *          true - if trainer is available
      */
-    public boolean setTimeSlot(TimeSlot trainingSlot,
-                               Trainer currentTrainer) {
-        this.currentTrainer = currentTrainer;
-        if(!currentTrainer.timeSlotAvailable(trainingSlot, this)) {
-            return false;
-        } else {
-            this.trainingSlot = trainingSlot;
-            FileUtilities.saveList(FILE_PATH, studentList);
-            return true;
-
-        }
+    public void setTrainingTimeSlot(TimeSlot trainingSlot, Trainer trainer) {
+        this.trainingSlot = trainingSlot;
+        this.currentTrainer = trainer;
     }
 
     /**
@@ -104,5 +93,6 @@ public class Student extends Member implements Serializable {
     public static List<Student> getStudentList() {
         return studentList;
     }
+
 
 }
