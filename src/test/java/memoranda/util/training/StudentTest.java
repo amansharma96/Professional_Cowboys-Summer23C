@@ -46,14 +46,11 @@ class StudentTest {
 
     @org.junit.jupiter.api.Test
     void getAndSetTimeSlot() {
-        final TimeSlot validStartTimeSlot = new TimeSlot(student,
-                Day.MONDAY,12,45);
-        final TimeSlot validEndTimeSlot = new TimeSlot(student,
-                Day.MONDAY,13,45);
-        final boolean result = student.setTimeSlot(validStartTimeSlot,validEndTimeSlot, trainer);
+        final TimeSlot validTimeSlot = new TimeSlot(student,
+                Day.MONDAY,12,45,10);
+        final boolean result = student.setTimeSlot(validTimeSlot, trainer);
         final boolean expectedResult = true;
-        Assertions.assertEquals(student.getStartTrainingSlot(), validStartTimeSlot);
-        Assertions.assertEquals(student.getEndTrainingSlot(), validEndTimeSlot);
+        Assertions.assertEquals(student.getTrainingSlot(), validTimeSlot);
         Assertions.assertEquals(result,expectedResult);
     }
 }

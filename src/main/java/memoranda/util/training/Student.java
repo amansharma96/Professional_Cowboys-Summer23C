@@ -13,14 +13,14 @@ import java.util.List;
  */
 public class Student extends Member implements Serializable {
     private static final String FILE_PATH = "logs/studentDatabase";
-    private TimeSlot startTrainingSlot;
-    private TimeSlot endTrainingSlot;
     private Trainer currentTrainer;
     private static List<Student> studentList;
 
     static {
         studentList = FileUtilities.populateList(FILE_PATH, Student.class);
     }
+
+    private TimeSlot trainingSlot;
 
     /**
      * Private constructor for serialization
@@ -63,32 +63,30 @@ public class Student extends Member implements Serializable {
 
     /**
      * sets the time slots student will train in
-     * @param startTrainingSlot the time slot the student will start training
-     * @param endTrainingSlot the time slot student will stop training
+     * @param trainingSlot the time slot the student will start training
      * @param currentTrainer the trainer to be training with
      * @return  false - if trainer is unavailable
      *          true - if trainer is available
      */
-    public boolean setTimeSlot(TimeSlot startTrainingSlot,
-                               TimeSlot endTrainingSlot, Trainer currentTrainer) {
+    public boolean setTimeSlot(TimeSlot trainingSlot,
+                               Trainer currentTrainer) {
         this.currentTrainer = currentTrainer;
-        if(!currentTrainer.timeSlotAvailable(startTrainingSlot,endTrainingSlot)) {
+        if(!currentTrainer.timeSlotAvailable(trainingSlot)) {
             return false;
         } else {
-            this.startTrainingSlot = startTrainingSlot;
-            this.endTrainingSlot = endTrainingSlot;
+            this.trainingSlot = trainingSlot;
             FileUtilities.saveList(FILE_PATH, studentList);
             return true;
 
         }
     }
 
-    public TimeSlot getStartTrainingSlot() {
-        return startTrainingSlot;
-    }
-
-    public TimeSlot getEndTrainingSlot() {
-        return endTrainingSlot;
+    /**
+     * Returns the training slot
+     * @return the training slot
+     */
+    public TimeSlot getTrainingSlot() {
+        return trainingSlot;
     }
 
     /**
@@ -106,4 +104,5 @@ public class Student extends Member implements Serializable {
     public static List<Student> getStudentList() {
         return studentList;
     }
+
 }

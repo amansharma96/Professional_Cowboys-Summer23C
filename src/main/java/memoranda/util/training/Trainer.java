@@ -57,7 +57,7 @@ public class Trainer extends Member implements Serializable {
     }
 
 
-    public boolean timeSlotAvailable(TimeSlot startTrainingSlot,TimeSlot endTrainingSlot) {
+    public boolean timeSlotAvailable(TimeSlot startTrainingSlot) {
 
         return true;
     }

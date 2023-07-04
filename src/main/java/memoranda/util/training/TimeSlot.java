@@ -5,13 +5,15 @@ public class TimeSlot {
     private final Day day;
     private final int hour;
     private final int minute;
+    private final int durationInMinutes;
 
 
-    public TimeSlot(Member member, Day day, int hour, int minute) {
+    public TimeSlot(Member member, Day day, int hour, int minute, int durationInMinutes) {
         this.member = member;
         this.day = day;
         this.hour = hour;
         this.minute = minute;
+        this.durationInMinutes = durationInMinutes;
     }
 
     public Day getDay() {
@@ -28,5 +30,9 @@ public class TimeSlot {
 
     public Member getMember() {
         return member;
+    }
+
+    public int getDurationInMinutes() {
+        return durationInMinutes;
     }
 }
