@@ -15,7 +15,7 @@ public class Trainer extends Member implements Serializable {
     private final TreeSet<TrainingTimeSlot> availableTimes;
 
     private static final int MINUTES_IN_DAYS = 1440;
-    private final int MINUTES_IN_HOUR = 60;
+    private static final int MINUTES_IN_HOUR = 60;
     private int minimumSessionTime; //how short a session can be booked for
     private final ArrayList<Student> studentList;
     private static final List<Trainer> trainerList;
@@ -108,7 +108,7 @@ public class Trainer extends Member implements Serializable {
      * @param bounds the time slot that represents the bounds
      * @return true if is a valid inquiry
      */
-    private boolean checkValidTimeSlot(TrainingTimeSlot trainingTimeSlot, TrainingTimeSlot bounds) {
+    public static boolean checkValidTimeSlot(TrainingTimeSlot trainingTimeSlot, TrainingTimeSlot bounds) {
         final double durationAvailable = bounds.getEndHour()+
                 ((double) bounds.getEndMinute() / MINUTES_IN_HOUR) -
                 bounds.getHour() + ((double) bounds.getMinute() / MINUTES_IN_HOUR);
@@ -116,7 +116,7 @@ public class Trainer extends Member implements Serializable {
                 ((double) bounds.getMinute() / MINUTES_IN_HOUR);
 
         final boolean bellowMinimumDuration =
-                trainingTimeSlot.getDurationInMinutes()<minimumSessionTime;
+                trainingTimeSlot.getDurationInMinutes()<bounds.getTrainer().getMinimumSessionTime();
         final boolean schedulePastBounds =
                 (trainingTimeSlot.getEndHour() +
                         ((double) trainingTimeSlot.getEndMinute() / MINUTES_IN_HOUR)) > durationAvailable;
@@ -135,7 +135,7 @@ public class Trainer extends Member implements Serializable {
      * @param newSlot the slot to check
      * @return true if intersects
      */
-    private boolean hasOverlap(TrainingTimeSlot newSlot) {
+    public boolean hasOverlap(TrainingTimeSlot newSlot) {
         double newStart = newSlot.getStartDoubleView();
         double newEnd = newSlot.getEndDoubleView();
         for (TrainingTimeSlot existingSlot : availableTimes) {

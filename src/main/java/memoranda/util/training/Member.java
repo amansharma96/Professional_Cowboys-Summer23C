@@ -52,6 +52,9 @@ public class Member implements Serializable{
         FileUtilities.saveList(FILE_PATH, memberList);
     }
 
+    /**
+     * Used in serialization. Not recommended for initialization
+     */
     public Member() {
 
     }
