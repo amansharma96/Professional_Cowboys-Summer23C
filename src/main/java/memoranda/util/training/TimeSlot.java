@@ -9,7 +9,7 @@ public class TimeSlot {
     private final int hour;
     private final int minute;
     private final int durationInMinutes;
-    private final int MINUTES_IN_HOUR = 60;
+    private static final int MINUTES_IN_HOUR = 60;
 
 
     /**

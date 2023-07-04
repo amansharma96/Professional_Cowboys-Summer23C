@@ -68,13 +68,16 @@ public class Student extends Member implements Serializable {
     public void setTrainingTimeSlot(TimeSlot trainingSlot, Trainer trainer) {
         this.trainingSlot = trainingSlot;
         this.currentTrainer = trainer;
+        if(trainer!= null) {
+            trainer.addStudent(this);
+        }
     }
 
     /**
      * Returns the training slot
      * @return the training slot
      */
-    public TimeSlot getTrainingSlot() {
+    public TimeSlot getTrainingTimeSlot() {
         return trainingSlot;
     }
 

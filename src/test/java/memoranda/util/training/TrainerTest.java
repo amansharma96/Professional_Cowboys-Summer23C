@@ -1,8 +1,6 @@
 package memoranda.util.training;
 
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.util.Random;
 
@@ -130,13 +128,57 @@ class TrainerTest {
     }
 
     @Test
-    void removeStudentFromTrainer() {
+    void removeStudent_studentWithNonMergableTimeSlot() {
+        // Set up a time slot that cannot be merged with any other time slot
+        TimeSlot ts = new TimeSlot(student, trainer, Day.MONDAY, 10, 0, 60);
+        trainer.addAvailableTime(ts);
+        student.setTrainingTimeSlot(ts,trainer);
 
+        assertTrue(trainer.removeStudent(student));
+        // Assert that the student's training time slot, current trainer are null after removal
+        assertNull(student.getTrainingTimeSlot());
+        assertNull(student.getCurrentTrainer());
+        // Assert that the trainer's available times contain the student's previous time slot
+        assertTrue(trainer.getAvailableTimes().contains(ts));
     }
 
     @Test
-    void rejoiningTimeSlotsAfterRemovingStudent() {
+    void removeStudent_studentWithOneMergableTimeSlot() {
+        // Set up time slots that can be merged
+        TimeSlot ts1 = new TimeSlot(student, trainer, Day.TUESDAY, 9, 0, 60);
+        TimeSlot ts2 = new TimeSlot(null, trainer, Day.TUESDAY, 10, 0, 60);
+        trainer.addAvailableTime(ts1);
+        trainer.addAvailableTime(ts2);
+        student.setTrainingTimeSlot(ts1, trainer);
 
+        assertTrue(trainer.removeStudent(student));
+        // Assert that the student's training time slot, current trainer are null after removal
+        assertNull(student.getTrainingTimeSlot());
+        assertNull(student.getCurrentTrainer());
+        // Assert that the trainer's available times contain the merged time slot
+        TimeSlot merged = new TimeSlot(null, trainer, Day.TUESDAY, 9, 0, 120);
+        assertTrue(trainer.getAvailableTimes().contains(merged));
     }
+
+    @Test
+    void removeStudent_studentWithTwoMergableTimeSlots() {
+        // Set up time slots that can be merged
+        TimeSlot ts1 = new TimeSlot(null, trainer, Day.WEDNESDAY, 9, 0, 60);
+        TimeSlot ts2 = new TimeSlot(student, trainer, Day.WEDNESDAY, 10, 0, 60);
+        TimeSlot ts3 = new TimeSlot(null, trainer, Day.WEDNESDAY, 11, 0, 60);
+        trainer.addAvailableTime(ts1);
+        trainer.addAvailableTime(ts2);
+        trainer.addAvailableTime(ts3);
+        student.setTrainingTimeSlot(ts2, trainer);
+
+        assertTrue(trainer.removeStudent(student));
+        // Assert that the student's training time slot, current trainer are null after removal
+        assertNull(student.getTrainingTimeSlot());
+        assertNull(student.getCurrentTrainer());
+        // Assert that the trainer's available times contain the merged time slot
+        TimeSlot merged = new TimeSlot(null, trainer, Day.WEDNESDAY, 9, 0, 180);
+        assertTrue(trainer.getAvailableTimes().contains(merged));
+    }
+
 
 }
