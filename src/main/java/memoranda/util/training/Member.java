@@ -11,19 +11,20 @@ import java.util.*;
  * This class represents a member of the gym
  */
 public class Member implements Serializable{
-    private String firstName, lastName;
-    private String joinDate;
+    private String firstName ="";
+    private String lastName = "";
+    private String joinDate = "";
     private int memberID;
     private boolean activeMembership;
     private static final SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
-    public static List<Member> memberList;
+    private static List<Member> memberList;
+    private static final String FILE_PATH = "logs/memberDatabase";
 
     /*
      * On compile, populates the memberList from the save file
      */
     static {
-        File file = new File("logs/memberDatabase");
-        memberList = FileUtilities.populateList("logs/memberDatabase", Member.class);
+        memberList = FileUtilities.populateList(FILE_PATH, Member.class);
     }
 
     /**
@@ -48,7 +49,7 @@ public class Member implements Serializable{
         this.memberID = generateMemberID(); //functions in O(N) time
         this.activeMembership = true;
         memberList.add(this);
-        FileUtilities.saveList("logs/memberDatabase", memberList);
+        FileUtilities.saveList(FILE_PATH, memberList);
     }
 
     public Member() {
@@ -123,6 +124,24 @@ public class Member implements Serializable{
     }
 
     /**
+     * Removes a member from the member list
+     * @param memberSearch the member to be removed
+     * @param memberList the list to be removed from
+     * @param savePath the path to save the new list to
+     * @return true if it found and removed that member
+     */
+    public static <T> boolean removeMember(Member memberSearch, List<T> memberList, String savePath) {
+        for(T member : memberList) {
+            if(((Member) member).getMemberID() == memberSearch.getMemberID()) {
+                memberList.remove(member);
+                FileUtilities.saveList(savePath, memberList);
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
      * returns the member ID of the member
      * @return member ID of the member
      */
@@ -161,14 +180,15 @@ public class Member implements Serializable{
      */
     public void setLastName(String lastName) {
         this.lastName = lastName;
-        FileUtilities.saveList("logs/memberDatabase", memberList);
+        FileUtilities.saveList(FILE_PATH, memberList);
     }
 
     /**
      * returns the full name of the member
      * @return full name of the member
      */
-    public String getFullName() {
+    @Override
+    public String toString() {
         return getFirstName() + " " + getLastName();
     }
 
@@ -197,5 +217,21 @@ public class Member implements Serializable{
      */
     public boolean getActiveMembership() {
         return this.activeMembership;
+    }
+
+    /**
+     * Returns the file path
+     * @return the file path of saves
+     */
+    public static String getFilePath(){
+        return FILE_PATH;
+    }
+
+    /**
+     * Returns the List of members
+     * @return the List of members
+     */
+    public static List<Member> getMemberList() {
+        return memberList;
     }
 }

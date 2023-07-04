@@ -3,6 +3,7 @@ package memoranda.util.training;
 import memoranda.util.file.FileUtilities;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -11,13 +12,14 @@ import java.util.List;
  * It stores who they are training with, what time slot they are training in
  */
 public class Student extends Member implements Serializable {
+    private static final String FILE_PATH = "logs/studentDatabase";
     private TimeSlot startTrainingSlot;
     private TimeSlot endTrainingSlot;
     private Trainer currentTrainer;
-    public static List<Student> studentList;
+    private static List<Student> studentList;
 
     static {
-        studentList = FileUtilities.populateList("logs/studentDatabase", Student.class);
+        studentList = FileUtilities.populateList(FILE_PATH, Student.class);
     }
 
     /**
@@ -33,6 +35,10 @@ public class Student extends Member implements Serializable {
      */
     public Student(int memberID) {
         super(memberID);
+        if(studentList==null) {
+            studentList = new ArrayList<Student>();
+            studentList.add(this);
+        }
         if(!studentList.contains(this)) {
             studentList.add(this);
         }
@@ -71,7 +77,7 @@ public class Student extends Member implements Serializable {
         } else {
             this.startTrainingSlot = startTrainingSlot;
             this.endTrainingSlot = endTrainingSlot;
-            FileUtilities.saveList("logs/studentDatabase", studentList);
+            FileUtilities.saveList(FILE_PATH, studentList);
             return true;
 
         }
@@ -83,5 +89,21 @@ public class Student extends Member implements Serializable {
 
     public TimeSlot getEndTrainingSlot() {
         return endTrainingSlot;
+    }
+
+    /**
+     * Returns the file path
+     * @return the file path of saves
+     */
+    public static String getFilePath(){
+        return FILE_PATH;
+    }
+
+    /**
+     * Returns the List of members
+     * @return the List of members
+     */
+    public static List<Student> getStudentList() {
+        return studentList;
     }
 }

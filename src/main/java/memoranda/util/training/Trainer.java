@@ -11,6 +11,7 @@ import java.util.*;
  * It stores the list of students training with them and what times are available
  */
 public class Trainer extends Member implements Serializable {
+    private static final String FILE_PATH = "logs/trainerDatabase";
     private final ArrayList<TimeSlot> availableTimes;
     private static final int MINUTES_IN_DAYS = 1440;
     private int minimumSessionTime; //how short a session can be booked for
@@ -18,7 +19,7 @@ public class Trainer extends Member implements Serializable {
     private static final List<Trainer> trainerList;
 
     static {
-        trainerList = FileUtilities.populateList("logs/trainerDatabase", Trainer.class);
+        trainerList = FileUtilities.populateList(FILE_PATH, Trainer.class);
     }
 
     public Trainer(int memberID, int minimumSessionTime) {
@@ -46,11 +47,6 @@ public class Trainer extends Member implements Serializable {
             return false;
         return studentList.add(student);
     }
-    public boolean removeStudent(Student student) {
-        if(student==null)
-            return false;
-        return studentList.remove(student);
-    }
 
     public int getMinimumSessionTime() {
         return minimumSessionTime;
@@ -66,6 +62,21 @@ public class Trainer extends Member implements Serializable {
         return true;
     }
     public void saveTrainer() {
-        FileUtilities.saveList("logs/trainerDatabase", trainerList);
+        FileUtilities.saveList(FILE_PATH, trainerList);
+    }
+
+    /**
+     * Returns the file path
+     * @return the file path of saves
+     */
+    public static String getFilePath(){
+        return FILE_PATH;
+    }
+    /**
+     * Returns the List of members
+     * @return the List of members
+     */
+    public static List<Trainer> getTrainerList() {
+        return trainerList;
     }
 }

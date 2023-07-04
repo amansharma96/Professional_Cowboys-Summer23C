@@ -5,6 +5,7 @@ import java.time.format.DateTimeFormatter
 plugins {
   id 'java'
   id 'application'
+  id 'jacoco'
 }
 
 mainClassName = 'main/java/memoranda/Start'
@@ -27,9 +28,29 @@ sourceSets {
   }
 }
 
+jacoco {
+  toolVersion = "0.8.8"
+}
+
+jacocoTestReport {
+  reports {
+    xml.enabled false
+    csv.enabled false
+    html.destination file("${buildDir}/jacocoHtml")
+  }
+  dependsOn test // this makes sure the test task is run before the report is generated
+}
+
 test {
   useJUnitPlatform()
+  finalizedBy jacocoTestReport
 }
+
+
+
+
+
+
 
 
 // Get the current date and time as a string

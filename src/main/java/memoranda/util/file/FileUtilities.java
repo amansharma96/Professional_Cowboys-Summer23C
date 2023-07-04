@@ -31,7 +31,7 @@ public class FileUtilities {
             try {
                 //Create a file and return no need to populate list
                 if(studentFile.createNewFile()) {
-                    return null;
+                    return new ArrayList<T>();
                 }
             } catch (IOException ex) {
                 throw new RuntimeException(ex);

@@ -1,3 +1,5 @@
+package memoranda.util.training;
+
 import memoranda.util.training.*;
 import org.junit.jupiter.api.Assertions;
 
@@ -27,6 +29,13 @@ class StudentTest {
         final int validMinimumStartTime = 15;
         student = new Student(validStudentID);
         trainer = new Trainer(validTrainerID, validMinimumStartTime);
+    }
+    @org.junit.jupiter.api.AfterEach
+    void tearDown() {
+        Member.removeMember(member1,Member.getMemberList(),Member.getFilePath());
+        Member.removeMember(member2,Member.getMemberList(),Member.getFilePath());
+        Student.removeMember(student,Student.getStudentList(),Student.getFilePath());
+        Trainer.removeMember(member1,Trainer.getTrainerList(),Trainer.getFilePath());
     }
 
     @org.junit.jupiter.api.Test
