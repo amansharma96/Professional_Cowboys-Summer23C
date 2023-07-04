@@ -1,7 +1,9 @@
 package memoranda.util.training;
 
+import memoranda.History;
 import memoranda.util.file.FileUtilities;
 
+import javax.xml.datatype.Duration;
 import java.io.Serializable;
 import java.util.*;
 
@@ -12,7 +14,7 @@ import java.util.*;
  */
 public class Trainer extends Member implements Serializable {
     private static final String FILE_PATH = "logs/trainerDatabase";
-    private final ArrayList<TimeSlot> availableTimes;
+    private ArrayList<TimeSlot> availableTimes;
     private static final int MINUTES_IN_DAYS = 1440;
     private int minimumSessionTime; //how short a session can be booked for
     private final ArrayList<Student> studentList;
@@ -27,7 +29,6 @@ public class Trainer extends Member implements Serializable {
         studentList = new ArrayList<Student>();
         if(!trainerList.contains(this))
             trainerList.add(this);
-        availableTimes = new ArrayList<TimeSlot>();
         this.minimumSessionTime = minimumSessionTime;
     }
 
@@ -57,11 +58,67 @@ public class Trainer extends Member implements Serializable {
     }
 
 
-    public boolean timeSlotAvailable(TimeSlot startTrainingSlot) {
+    public boolean timeSlotAvailable(TimeSlot startTrainingSlot, Student student) {
+        final int minutesInAnHour = 60;
+        final int hoursInADay = 24;
+        final int finalHour = startTrainingSlot.getHour() + (int) Math.floor(
+                (startTrainingSlot.getMinute() +
+                        (double) startTrainingSlot.getDurationInMinutes()) /minutesInAnHour);
+        final int convertSolicitStart = startTrainingSlot.getHour()
+                + (startTrainingSlot.getMinute()/minutesInAnHour);
+        final int convertSolicitEnd = (int) (finalHour + ((startTrainingSlot.getMinute() +
+                        (double) startTrainingSlot.getDurationInMinutes()) % minutesInAnHour));
 
-        return true;
+        if(startTrainingSlot.getDurationInMinutes()<this.minimumSessionTime
+            || convertSolicitStart > hoursInADay) {
+            return false;
+        }
+
+        for(TimeSlot time : this.availableTimes) {
+            if(time.getDay()==startTrainingSlot.getDay()) {
+                final int convertTimeStart = time.getHour()
+                        + (time.getMinute()/minutesInAnHour);
+                final int finalTimeHour = time.getHour() + (int) Math.floor((time.getMinute() +
+                                (double) time.getDurationInMinutes()) /minutesInAnHour);
+                final int convertTimeEnd = (int) (finalTimeHour + ((time.getMinute() +
+                        (double) time.getDurationInMinutes()) % minutesInAnHour));
+                if(convertSolicitStart>=convertTimeStart
+                    && convertSolicitEnd<=convertTimeEnd) {
+                    addTrainingTime(startTrainingSlot, time, student);
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
-    public void saveTrainer() {
+
+    private void addTrainingTime(TimeSlot trainingSlot, TimeSlot trainerTime, Student student) {
+        studentList.add(student);
+        availableTimes.remove(trainerTime);
+        final int minutesInAHour = 60;
+        int trainingSlotStartTime = trainingSlot.getHour()*minutesInAHour
+                + trainingSlot.getMinute();
+        int trainerSlotStartTime = trainerTime.getHour()*minutesInAHour
+                + trainerTime.getMinute();
+        final int newDuration = trainingSlotStartTime - trainerSlotStartTime;
+        TimeSlot beforeTime = new TimeSlot(trainerTime.getMember(),trainerTime.getDay(),
+                trainerTime.getHour(),trainerTime.getMinute(),newDuration);
+        availableTimes.add(beforeTime);
+        final int newHourStart = (int) (trainingSlot.getHour() + Math.floor((trainingSlot.getMinute()
+                        + (double) trainingSlot.getDurationInMinutes()) /minutesInAHour));
+        final int newMinuteStart = (int) Math.floor((trainingSlot.getMinute()
+                + (double) trainingSlot.getDurationInMinutes()) % minutesInAHour);
+
+        final int newAfterDuration = trainerTime.getDurationInMinutes()-newDuration
+                - trainingSlot.getDurationInMinutes();
+
+        TimeSlot afterTime = new TimeSlot(trainerTime.getMember(),trainerTime.getDay(),
+                newHourStart,newMinuteStart,newAfterDuration);
+        availableTimes.add(afterTime);
+    }
+
+    public void saveTrainerFile() {
         FileUtilities.saveList(FILE_PATH, trainerList);
     }
 

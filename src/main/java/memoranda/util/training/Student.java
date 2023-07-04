@@ -71,7 +71,7 @@ public class Student extends Member implements Serializable {
     public boolean setTimeSlot(TimeSlot trainingSlot,
                                Trainer currentTrainer) {
         this.currentTrainer = currentTrainer;
-        if(!currentTrainer.timeSlotAvailable(trainingSlot)) {
+        if(!currentTrainer.timeSlotAvailable(trainingSlot, this)) {
             return false;
         } else {
             this.trainingSlot = trainingSlot;
