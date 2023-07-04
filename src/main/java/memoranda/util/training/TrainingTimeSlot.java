@@ -2,7 +2,7 @@ package memoranda.util.training;
 
 import java.util.Comparator;
 
-public class TimeSlot {
+public class TrainingTimeSlot {
     private final Member member;
     private final Trainer trainer;
     private final Day day;
@@ -22,7 +22,7 @@ public class TimeSlot {
      * @param durationInMinutes the duration in minutes of this slot
      *
      */
-    public TimeSlot(Member member, Trainer trainer, Day day, int hour, int minute, int durationInMinutes) {
+    public TrainingTimeSlot(Member member, Trainer trainer, Day day, int hour, int minute, int durationInMinutes) {
         this.member = member;
         this.trainer = trainer;
         this.day = day;
@@ -76,9 +76,9 @@ public class TimeSlot {
         return trainer;
     }
 }
-class TimeSlotComparator implements Comparator<TimeSlot> {
+class TimeSlotComparator implements Comparator<TrainingTimeSlot> {
     @Override
-    public int compare(TimeSlot slot1, TimeSlot slot2) {
+    public int compare(TrainingTimeSlot slot1, TrainingTimeSlot slot2) {
         int dayComparison = slot1.getDay().compareTo(slot2.getDay());
 
         if (dayComparison != 0) {

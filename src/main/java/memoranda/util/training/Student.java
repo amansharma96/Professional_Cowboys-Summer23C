@@ -20,7 +20,7 @@ public class Student extends Member implements Serializable {
         studentList = FileUtilities.populateList(FILE_PATH, Student.class);
     }
 
-    private TimeSlot trainingSlot;
+    private TrainingTimeSlot trainingSlot;
 
     /**
      * Private constructor for serialization
@@ -44,28 +44,11 @@ public class Student extends Member implements Serializable {
         }
     }
 
-
-    /**
-     * retrieves the current Trainer student is training with
-     * @return the current Trainer or no trainer with the name NOT ASSIGNED
-     */
-    public Trainer getCurrentTrainer() {
-        return this.currentTrainer;
-    }
-
-    /**
-     * sets the current Trainer
-     * @param trainer the current Trainer
-     */
-    public void setCurrentTrainer(Trainer trainer) {
-        this.currentTrainer = trainer;
-    }
-
     /**
      * sets the time slots student will train in
      * @param trainingSlot the time slot the student will start training
      */
-    public void setTrainingTimeSlot(TimeSlot trainingSlot, Trainer trainer) {
+    public void setTrainingTimeSlot(TrainingTimeSlot trainingSlot, Trainer trainer) {
         this.trainingSlot = trainingSlot;
         this.currentTrainer = trainer;
         if(trainer!= null) {
@@ -77,7 +60,7 @@ public class Student extends Member implements Serializable {
      * Returns the training slot
      * @return the training slot
      */
-    public TimeSlot getTrainingTimeSlot() {
+    public TrainingTimeSlot getTrainingTimeSlot() {
         return trainingSlot;
     }
 

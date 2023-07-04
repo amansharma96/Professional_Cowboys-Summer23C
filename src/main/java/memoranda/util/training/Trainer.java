@@ -12,7 +12,7 @@ import java.util.*;
  */
 public class Trainer extends Member implements Serializable {
     private static final String FILE_PATH = "logs/trainerDatabase";
-    private final TreeSet<TimeSlot> availableTimes;
+    private final TreeSet<TrainingTimeSlot> availableTimes;
 
     private static final int MINUTES_IN_DAYS = 1440;
     private final int MINUTES_IN_HOUR = 60;
@@ -43,9 +43,9 @@ public class Trainer extends Member implements Serializable {
      * Adds a time slot a trainer is able to train in
      * @param availableTime the timeslot available
      */
-    public boolean addAvailableTime(TimeSlot availableTime) {
+    public boolean addAvailableTime(TrainingTimeSlot availableTime) {
         final int startHourAndMinute = 0;
-        TimeSlot fullDay = new TimeSlot(this, null, Day.UNDEFINED,
+        TrainingTimeSlot fullDay = new TrainingTimeSlot(this, null, Day.UNDEFINED,
                 0, 0, MINUTES_IN_DAYS);
         if(checkValidTimeSlot(availableTime,fullDay) && !hasOverlap(availableTime)) {
             this.availableTimes.add(availableTime);
@@ -62,10 +62,10 @@ public class Trainer extends Member implements Serializable {
      * @param student the student who wants to fill the slot
      * @return true if added to the schedule
      */
-    public boolean fillTrainingSlot(TimeSlot trainingSlot, Student student) {
+    public boolean fillTrainingSlot(TrainingTimeSlot trainingSlot, Student student) {
         studentList.add(student);
-        TimeSlot trainerTime = null;
-        for(TimeSlot time : availableTimes) {
+        TrainingTimeSlot trainerTime = null;
+        for(TrainingTimeSlot time : availableTimes) {
             if(checkValidTimeSlot(trainingSlot,time)) {
                 trainerTime = time;
                 break;
@@ -77,24 +77,23 @@ public class Trainer extends Member implements Serializable {
 
         availableTimes.remove(trainerTime);
 
-        //Separate the before TimeSlot, it is still available
+        //Separate the before TrainingTimeSlot, it is still available
         final double durationBetweenStarts = trainingSlot.getStartDoubleView()
                 - trainerTime.getStartDoubleView();
-        TimeSlot beforeTime = new TimeSlot(trainerTime.getMember(),trainerTime.getTrainer(),
+        TrainingTimeSlot beforeTime = new TrainingTimeSlot(trainerTime.getMember(),trainerTime.getTrainer(),
                 trainerTime.getDay(),
                 trainerTime.getHour(),trainerTime.getMinute(),(int) durationBetweenStarts);
         addAvailableTime(beforeTime);
 
-        //Separate the student TimeSlot, it is unavailable
+        //Separate the student TrainingTimeSlot, it is unavailable
         student.setTrainingTimeSlot(trainingSlot,this);
-        student.setCurrentTrainer(this);
         FileUtilities.saveList(FILE_PATH, trainerList);
         FileUtilities.saveList(Student.getFilePath(), Student.getStudentList());
 
-        //Separate the after TimeSlot, it is still available
+        //Separate the after TrainingTimeSlot, it is still available
         final double newAfterDuration = trainerTime.getDurationInMinutes()-durationBetweenStarts
                 - trainingSlot.getDurationInMinutes();
-        TimeSlot afterTime = new TimeSlot(trainerTime.getMember(),trainerTime.getTrainer(),
+        TrainingTimeSlot afterTime = new TrainingTimeSlot(trainerTime.getMember(),trainerTime.getTrainer(),
                 trainerTime.getDay(),
                 trainingSlot.getEndHour(), trainingSlot.getEndMinute(),(int) newAfterDuration);
         addAvailableTime(afterTime);
@@ -105,11 +104,11 @@ public class Trainer extends Member implements Serializable {
 
     /**
      * Checks if a time slot is within the bounds
-     * @param timeSlot the timeslot to check
+     * @param trainingTimeSlot the timeslot to check
      * @param bounds the time slot that represents the bounds
      * @return true if is a valid inquiry
      */
-    private boolean checkValidTimeSlot(TimeSlot timeSlot, TimeSlot bounds) {
+    private boolean checkValidTimeSlot(TrainingTimeSlot trainingTimeSlot, TrainingTimeSlot bounds) {
         final double durationAvailable = bounds.getEndHour()+
                 ((double) bounds.getEndMinute() / MINUTES_IN_HOUR) -
                 bounds.getHour() + ((double) bounds.getMinute() / MINUTES_IN_HOUR);
@@ -117,15 +116,15 @@ public class Trainer extends Member implements Serializable {
                 ((double) bounds.getMinute() / MINUTES_IN_HOUR);
 
         final boolean bellowMinimumDuration =
-                timeSlot.getDurationInMinutes()<minimumSessionTime;
+                trainingTimeSlot.getDurationInMinutes()<minimumSessionTime;
         final boolean schedulePastBounds =
-                (timeSlot.getEndHour() +
-                        ((double) timeSlot.getEndMinute() / MINUTES_IN_HOUR)) > durationAvailable;
+                (trainingTimeSlot.getEndHour() +
+                        ((double) trainingTimeSlot.getEndMinute() / MINUTES_IN_HOUR)) > durationAvailable;
 
 
         final boolean scheduleBeforeBounds =
-                (timeSlot.getHour() +
-                        ((double) timeSlot.getMinute() / MINUTES_IN_HOUR)) < dayStartTime;
+                (trainingTimeSlot.getHour() +
+                        ((double) trainingTimeSlot.getMinute() / MINUTES_IN_HOUR)) < dayStartTime;
 
         return !bellowMinimumDuration
                 && !schedulePastBounds && !scheduleBeforeBounds;
@@ -136,10 +135,10 @@ public class Trainer extends Member implements Serializable {
      * @param newSlot the slot to check
      * @return true if intersects
      */
-    private boolean hasOverlap(TimeSlot newSlot) {
+    private boolean hasOverlap(TrainingTimeSlot newSlot) {
         double newStart = newSlot.getStartDoubleView();
         double newEnd = newSlot.getEndDoubleView();
-        for (TimeSlot existingSlot : availableTimes) {
+        for (TrainingTimeSlot existingSlot : availableTimes) {
             double existingStart = existingSlot.getStartDoubleView();
             double existingEnd = existingSlot.getEndDoubleView();
 
@@ -188,7 +187,11 @@ public class Trainer extends Member implements Serializable {
         return minimumSessionTime;
     }
 
-    public void addStudent(Student student) {
+    /**
+     * Adds a student to the studentList
+     * @param student the student to add
+     */
+    protected void addStudent(Student student) {
         studentList.add(student);
     }
 
@@ -213,7 +216,6 @@ public class Trainer extends Member implements Serializable {
             studentList.remove(student);
             rejoinTimeSlot(student.getTrainingTimeSlot());
             student.setTrainingTimeSlot(null,null);
-            student.setCurrentTrainer(null);
             FileUtilities.saveList(FILE_PATH, trainerList);
             FileUtilities.saveList(Student.getFilePath(), Student.getStudentList());
         }
@@ -223,14 +225,14 @@ public class Trainer extends Member implements Serializable {
     /**
      * Rejoins adjacent time slots in availableTimes List
      * that are less than the minimumSessionTime distance apart into
-     * one TimeSlot. Checks if slots are in the same day,
+     * one TrainingTimeSlot. Checks if slots are in the same day,
      * then checks that the distance between the
      * time is less than the minimum session time.
      * @param trainingSlot the time slot to check for valid constraints
      */
-    private void rejoinTimeSlot(TimeSlot trainingSlot) {
-        TimeSlot lower = availableTimes.lower(trainingSlot);
-        TimeSlot higher = availableTimes.higher(trainingSlot);
+    private void rejoinTimeSlot(TrainingTimeSlot trainingSlot) {
+        TrainingTimeSlot lower = availableTimes.lower(trainingSlot);
+        TrainingTimeSlot higher = availableTimes.higher(trainingSlot);
 
         boolean canMergeWithLower = lower != null
                 && lower.getDay() == trainingSlot.getDay()
@@ -247,7 +249,7 @@ public class Trainer extends Member implements Serializable {
             // remove lower and higher slots, then merge all into one
             availableTimes.remove(lower);
             availableTimes.remove(higher);
-            TimeSlot mergedSlot = new TimeSlot(
+            TrainingTimeSlot mergedSlot = new TrainingTimeSlot(
                     trainingSlot.getMember(),
                     trainingSlot.getTrainer(),
                     trainingSlot.getDay(),
@@ -260,7 +262,7 @@ public class Trainer extends Member implements Serializable {
         } else if (canMergeWithLower) {
             // remove lower slot, then merge with trainingSlot
             availableTimes.remove(lower);
-            TimeSlot mergedSlot = new TimeSlot(
+            TrainingTimeSlot mergedSlot = new TrainingTimeSlot(
                     trainingSlot.getMember(),
                     trainingSlot.getTrainer(),
                     trainingSlot.getDay(),
@@ -273,7 +275,7 @@ public class Trainer extends Member implements Serializable {
         } else if (canMergeWithHigher) {
             // remove higher slot, then merge with trainingSlot
             availableTimes.remove(higher);
-            TimeSlot mergedSlot = new TimeSlot(
+            TrainingTimeSlot mergedSlot = new TrainingTimeSlot(
                     trainingSlot.getMember(),
                     trainingSlot.getTrainer(),
                     trainingSlot.getDay(),
@@ -288,7 +290,11 @@ public class Trainer extends Member implements Serializable {
         }
     }
 
-    public TreeSet<TimeSlot> getAvailableTimes() {
+    /**
+     * Return the TreeSet representing available times for the trainer to train
+     * @return TreeSet representing available times for the trainer to train
+     */
+    public Set<TrainingTimeSlot> getAvailableTimes() {
         return availableTimes;
     }
 }

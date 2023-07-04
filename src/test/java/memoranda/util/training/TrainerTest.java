@@ -47,7 +47,7 @@ class TrainerTest {
         final int testHour = -11;
         final int testMinute = -1;
         final int duration = 30;
-        boolean result = trainer.addAvailableTime(new TimeSlot(
+        boolean result = trainer.addAvailableTime(new TrainingTimeSlot(
                 trainer,null, testDay,testHour,testMinute,duration));
         boolean expectedResult = false;
         assertEquals(result,expectedResult);
@@ -58,7 +58,7 @@ class TrainerTest {
         final int testHour = 24;
         final int testMinute = 0;
         final int duration = 30;
-        boolean result = trainer.addAvailableTime(new TimeSlot(
+        boolean result = trainer.addAvailableTime(new TrainingTimeSlot(
                 trainer,null, testDay,testHour,testMinute,duration));
         boolean expectedResult = false;
         assertEquals(result,expectedResult);
@@ -70,7 +70,7 @@ class TrainerTest {
         final int testHour = 13;
         final int testMinute = 0;
         final int duration = 1;
-        boolean result = trainer.addAvailableTime(new TimeSlot(
+        boolean result = trainer.addAvailableTime(new TrainingTimeSlot(
                 trainer,null, testDay,testHour,testMinute,duration));
         boolean expectedResult = false;
         assertEquals(result,expectedResult);
@@ -82,9 +82,9 @@ class TrainerTest {
         final int testHour = 0;
         final int testMinute = 0;
         final int duration = 1440;
-        boolean result = trainer.addAvailableTime(new TimeSlot(
+        boolean result = trainer.addAvailableTime(new TrainingTimeSlot(
                 trainer,null, testDay,testHour,testMinute,duration));
-        boolean result2 = trainer.addAvailableTime(new TimeSlot(
+        boolean result2 = trainer.addAvailableTime(new TrainingTimeSlot(
                 trainer,null, testDay,testHour,testMinute,duration));
         boolean expectedResult1 = true;
         boolean expectedResult2 = false;
@@ -98,12 +98,12 @@ class TrainerTest {
         final int testHour = 0;
         final int testMinute = 0;
         final int duration = 1440;
-        final TimeSlot timeSlot = new TimeSlot(
+        final TrainingTimeSlot trainingTimeSlot = new TrainingTimeSlot(
                 trainer,null, testDay,testHour,testMinute,duration);
-        boolean result = trainer.addAvailableTime(timeSlot);
+        boolean result = trainer.addAvailableTime(trainingTimeSlot);
         boolean expectedResult1 = true;
         assertEquals(expectedResult1,result);
-        boolean result2 = trainer.fillTrainingSlot(timeSlot,student);
+        boolean result2 = trainer.fillTrainingSlot(trainingTimeSlot,student);
         boolean expectedResult2 = true;
         assertEquals(expectedResult2,result2);
     }
@@ -114,15 +114,15 @@ class TrainerTest {
         final int testHour = 0;
         final int testMinute = 0;
         final int duration = 1440;
-        final TimeSlot timeSlot = new TimeSlot(
+        final TrainingTimeSlot trainingTimeSlot = new TrainingTimeSlot(
                 trainer,null, testDay,testHour,testMinute,duration);
-        boolean result = trainer.addAvailableTime(timeSlot);
+        boolean result = trainer.addAvailableTime(trainingTimeSlot);
         boolean expectedResult1 = true;
         assertEquals(expectedResult1,result);
-        boolean result2 = trainer.fillTrainingSlot(timeSlot,student);
+        boolean result2 = trainer.fillTrainingSlot(trainingTimeSlot,student);
         boolean expectedResult2 = true;
         assertEquals(expectedResult2,result2);
-        boolean result3 = trainer.fillTrainingSlot(timeSlot,student);
+        boolean result3 = trainer.fillTrainingSlot(trainingTimeSlot,student);
         boolean expectedResult3 = false;
         assertEquals(expectedResult3,result3);
     }
@@ -130,14 +130,13 @@ class TrainerTest {
     @Test
     void removeStudent_studentWithNonMergableTimeSlot() {
         // Set up a time slot that cannot be merged with any other time slot
-        TimeSlot ts = new TimeSlot(student, trainer, Day.MONDAY, 10, 0, 60);
+        TrainingTimeSlot ts = new TrainingTimeSlot(student, trainer, Day.MONDAY, 10, 0, 60);
         trainer.addAvailableTime(ts);
         student.setTrainingTimeSlot(ts,trainer);
 
         assertTrue(trainer.removeStudent(student));
         // Assert that the student's training time slot, current trainer are null after removal
         assertNull(student.getTrainingTimeSlot());
-        assertNull(student.getCurrentTrainer());
         // Assert that the trainer's available times contain the student's previous time slot
         assertTrue(trainer.getAvailableTimes().contains(ts));
     }
@@ -145,8 +144,8 @@ class TrainerTest {
     @Test
     void removeStudent_studentWithOneMergableTimeSlot() {
         // Set up time slots that can be merged
-        TimeSlot ts1 = new TimeSlot(student, trainer, Day.TUESDAY, 9, 0, 60);
-        TimeSlot ts2 = new TimeSlot(null, trainer, Day.TUESDAY, 10, 0, 60);
+        TrainingTimeSlot ts1 = new TrainingTimeSlot(student, trainer, Day.TUESDAY, 9, 0, 60);
+        TrainingTimeSlot ts2 = new TrainingTimeSlot(null, trainer, Day.TUESDAY, 10, 0, 60);
         trainer.addAvailableTime(ts1);
         trainer.addAvailableTime(ts2);
         student.setTrainingTimeSlot(ts1, trainer);
@@ -154,18 +153,17 @@ class TrainerTest {
         assertTrue(trainer.removeStudent(student));
         // Assert that the student's training time slot, current trainer are null after removal
         assertNull(student.getTrainingTimeSlot());
-        assertNull(student.getCurrentTrainer());
         // Assert that the trainer's available times contain the merged time slot
-        TimeSlot merged = new TimeSlot(null, trainer, Day.TUESDAY, 9, 0, 120);
+        TrainingTimeSlot merged = new TrainingTimeSlot(null, trainer, Day.TUESDAY, 9, 0, 120);
         assertTrue(trainer.getAvailableTimes().contains(merged));
     }
 
     @Test
     void removeStudent_studentWithTwoMergableTimeSlots() {
         // Set up time slots that can be merged
-        TimeSlot ts1 = new TimeSlot(null, trainer, Day.WEDNESDAY, 9, 0, 60);
-        TimeSlot ts2 = new TimeSlot(student, trainer, Day.WEDNESDAY, 10, 0, 60);
-        TimeSlot ts3 = new TimeSlot(null, trainer, Day.WEDNESDAY, 11, 0, 60);
+        TrainingTimeSlot ts1 = new TrainingTimeSlot(null, trainer, Day.WEDNESDAY, 9, 0, 60);
+        TrainingTimeSlot ts2 = new TrainingTimeSlot(student, trainer, Day.WEDNESDAY, 10, 0, 60);
+        TrainingTimeSlot ts3 = new TrainingTimeSlot(null, trainer, Day.WEDNESDAY, 11, 0, 60);
         trainer.addAvailableTime(ts1);
         trainer.addAvailableTime(ts2);
         trainer.addAvailableTime(ts3);
@@ -174,9 +172,8 @@ class TrainerTest {
         assertTrue(trainer.removeStudent(student));
         // Assert that the student's training time slot, current trainer are null after removal
         assertNull(student.getTrainingTimeSlot());
-        assertNull(student.getCurrentTrainer());
         // Assert that the trainer's available times contain the merged time slot
-        TimeSlot merged = new TimeSlot(null, trainer, Day.WEDNESDAY, 9, 0, 180);
+        TrainingTimeSlot merged = new TrainingTimeSlot(null, trainer, Day.WEDNESDAY, 9, 0, 180);
         assertTrue(trainer.getAvailableTimes().contains(merged));
     }
 

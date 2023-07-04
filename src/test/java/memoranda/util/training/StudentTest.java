@@ -37,10 +37,4 @@ class StudentTest {
         Student.removeMember(student,Student.getStudentList(),Student.getFilePath());
         Trainer.removeMember(member1,Trainer.getTrainerList(),Trainer.getFilePath());
     }
-
-    @org.junit.jupiter.api.Test
-    void getAndSetCurrentTrainer() {
-        student.setCurrentTrainer(trainer);
-        Assertions.assertEquals(trainer, student.getCurrentTrainer());
-    }
 }
