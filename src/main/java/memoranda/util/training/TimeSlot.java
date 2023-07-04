@@ -1,80 +1,32 @@
 package memoranda.util.training;
 
 public class TimeSlot {
-    private int memberID;
-    private Day day;
-    private int hourStart;
-    private int minuteStart;
-    private int hourEnd;
-    private int minuteEnd;
+    private final Member member;
+    private final Day day;
+    private final int hour;
+    private final int minute;
 
-    public TimeSlot(int memberID, Day day, int hourStart, int minuteStart, int hourEnd, int minuteEnd) {
 
-        this.memberID = memberID;
+    public TimeSlot(Member member, Day day, int hour, int minute) {
+        this.member = member;
         this.day = day;
-        this.hourStart = hourStart;
-        this.minuteStart = minuteStart;
-        this.hourEnd = hourEnd;
-        this.minuteEnd = minuteEnd;
-    }
-
-    public int getMemberID() {
-        return memberID;
-    }
-
-    public void setMemberID(int memberID) {
-        this.memberID = memberID;
+        this.hour = hour;
+        this.minute = minute;
     }
 
     public Day getDay() {
         return day;
     }
 
-    public void setDay(Day day) {
-        this.day = day;
+    public int getMinute() {
+        return minute;
     }
 
-    public int getHourStart() {
-        return hourStart;
+    public int getHour() {
+        return hour;
     }
 
-    public boolean setHourStart(int hourStart) {
-        if(hourStart > 60 || hourStart < 0)
-            return false;
-        this.hourStart = hourStart;
-        return true;
-    }
-
-    public int getMinuteStart() {
-        return minuteStart;
-    }
-
-    public boolean setMinuteStart(int minuteStart) {
-        if(minuteStart > 60 || minuteStart < 0)
-            return false;
-        this.minuteStart = minuteStart;
-        return true;
-    }
-
-    public int getHourEnd() {
-        return hourEnd;
-    }
-
-    public boolean setHourEnd(int hourEnd) {
-        if(hourEnd > 60 || hourEnd < 0)
-            return false;
-        this.hourEnd = hourEnd;
-        return true;
-    }
-
-    public int getMinuteEnd() {
-        return minuteEnd;
-    }
-
-    public boolean setMinuteEnd(int minuteEnd) {
-        if(minuteEnd > 60 || minuteEnd < 0)
-            return false;
-        this.minuteEnd = minuteEnd;
-        return true;
+    public Member getMember() {
+        return member;
     }
 }

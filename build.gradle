@@ -21,7 +21,15 @@ dependencies {
   implementation 'org.junit.jupiter:junit-jupiter:5.8.1'
 }
 
+sourceSets {
+  test {
+    java.srcDir 'src/test/java'
+  }
+}
 
+test {
+  useJUnitPlatform()
+}
 
 
 // Get the current date and time as a string

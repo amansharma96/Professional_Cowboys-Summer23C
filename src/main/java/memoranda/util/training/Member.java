@@ -1,5 +1,7 @@
 package memoranda.util.training;
 
+import memoranda.util.file.FileUtilities;
+
 import java.io.*;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -8,45 +10,20 @@ import java.util.*;
  * @Author Ryan Dinaro
  * This class represents a member of the gym
  */
-public class Member{
+public class Member implements Serializable{
     private String firstName, lastName;
     private String joinDate;
     private int memberID;
     private boolean activeMembership;
     private static final SimpleDateFormat formatter = new SimpleDateFormat("MM-dd-yyyy");
-    public static HashMap<Integer, Member> MemberList = new HashMap<Integer, Member>();
+    public static List<Member> memberList;
 
     /*
-     * On compile, populates the MemberList from the save file
+     * On compile, populates the memberList from the save file
      */
     static {
         File file = new File("logs/memberDatabase");
-        if (!file.exists()) {
-            try {
-                file.createNewFile();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        }
-        try {
-            Scanner memberPopulate = new Scanner(file);
-            memberPopulate.useDelimiter(" ");
-            if(memberPopulate.hasNextLine()) {
-                while (memberPopulate.hasNextLine()) {
-                    String firstName = memberPopulate.nextLine();
-                    String lastName = memberPopulate.nextLine();
-                    String joinDate = memberPopulate.next();
-                    int memberID = Integer.parseInt(memberPopulate.next());
-                    boolean activeMembership = Boolean.parseBoolean(memberPopulate.nextLine());
-                    if(firstName!=null&&lastName!=null&&joinDate!=null) {
-                        MemberList.put(memberID, new Member(firstName,lastName,joinDate,memberID,activeMembership));
-                    }
-                }
-            }
-        } catch (FileNotFoundException e) {
-            System.out.println("File not found.");
-            e.printStackTrace();
-        }
+        memberList = FileUtilities.populateList("logs/memberDatabase", Member.class);
     }
 
     /**
@@ -60,7 +37,7 @@ public class Member{
         //This prevents duplicate information from being written to the member database when
         //a name that is already created is inputted to the constructor with two arguments
         //this prevents duplicate entries. Functions in O(N) time.
-        for(Member member : MemberList.values()) {
+        for(Member member : memberList) {
             if(firstName.equals(member.firstName)&&lastName.equals(member.getLastName())) {
                 throw new DuplicateEntryException();
             }
@@ -70,8 +47,8 @@ public class Member{
         this.joinDate = formatter.format(new Date());
         this.memberID = generateMemberID(); //functions in O(N) time
         this.activeMembership = true;
-        MemberList.put(memberID,this);
-        saveInformation(true);
+        memberList.add(this);
+        FileUtilities.saveList("logs/memberDatabase", memberList);
     }
 
     public Member() {
@@ -108,49 +85,28 @@ public class Member{
     }
 
     /**
-     * This generates an ID in O(N) time if MemberList is not generated yet.
-     * Generates an ID in constant time if MemberList has already been generated
+     * This generates an ID in O(N) time if memberList is not generated yet.
+     * Generates an ID in constant time if memberList has already been generated
      * @return String representing the memberID
      */
     private int generateMemberID() {
         Random rand = new Random();
         int memberID = 0;
-        do {
+        while(true) {
+            boolean restartFlag = false;
             //generate an id of length 6
             memberID = 111111111 + rand.nextInt(888888888);
-        } while(MemberList.containsKey(memberID));
-        return memberID;
-    }
-
-    /**
-     * Saves the member information to the memberDatabase in Logs
-     * @param keepOldFiles if false, erases old file before writing
-     */
-    private void saveInformation(boolean keepOldFiles) {
-        try {
-            FileWriter logWriter = new FileWriter("logs/memberDatabase", keepOldFiles);
-            logWriter.write(getFirstName() + "\n" + getLastName() + "\n" + getJoinDate() + " "
-                    + getMemberID() + " " + getActiveMembership() + "\n");
-            logWriter.close();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            for(Member member : memberList) {
+                if(member.getMemberID()==memberID) {
+                    restartFlag = true;
+                    break;
+                }
+            }
+            if(!restartFlag) {
+                return memberID;
+            }
         }
     }
-
-    /**
-     * When called this method will put the contents of the MemberList into the save files,
-     * overwriting the old file. Necessary for any information changes that effects the save file
-     */
-    private void updateSaveFile() {
-        MemberList.put(this.memberID, this);
-        int count = 0;
-        for(Member member : MemberList.values()) {
-            member.saveInformation(count != 0);
-            count++;
-        }
-    }
-
-
     /**
      * Looks up the member by the memberID
      * @param targetID the ID you are looking for
@@ -158,7 +114,12 @@ public class Member{
      *          returns null if no such member exists
      */
     public static Member lookupMember(int targetID) {
-        return MemberList.get(targetID);
+        for(Member member : memberList) {
+            if(member.getMemberID() == targetID) {
+                return member;
+            }
+        }
+        return null;
     }
 
     /**
@@ -183,7 +144,7 @@ public class Member{
      */
     public void setFirstName(String firstName) {
         this.firstName = firstName;
-        updateSaveFile();
+        FileUtilities.saveList("logs/memberDatabase", memberList);
     }
 
     /**
@@ -200,7 +161,7 @@ public class Member{
      */
     public void setLastName(String lastName) {
         this.lastName = lastName;
-        updateSaveFile();
+        FileUtilities.saveList("logs/memberDatabase", memberList);
     }
 
     /**
@@ -227,7 +188,7 @@ public class Member{
      */
     public void setActiveMembership(boolean isActive) {
         this.activeMembership = isActive;
-        updateSaveFile();
+        FileUtilities.saveList("logs/memberDatabase", memberList);
     }
     /**
      * returns the members current membership status
@@ -237,5 +198,4 @@ public class Member{
     public boolean getActiveMembership() {
         return this.activeMembership;
     }
-
 }

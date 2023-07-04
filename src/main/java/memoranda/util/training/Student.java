@@ -1,9 +1,9 @@
 package memoranda.util.training;
 
+import memoranda.util.file.FileUtilities;
+
 import java.io.*;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Objects;
+import java.util.List;
 
 /**
  * @Author Ryan Dinaro
@@ -11,13 +11,13 @@ import java.util.Objects;
  * It stores who they are training with, what time slot they are training in
  */
 public class Student extends Member implements Serializable {
+    private TimeSlot startTrainingSlot;
+    private TimeSlot endTrainingSlot;
     private Trainer currentTrainer;
-    private TimeSlot trainingTime;
-    public static ArrayList<Integer> studentList;
+    public static List<Student> studentList;
 
     static {
-        studentList = new ArrayList<Integer>();
-        populateList();
+        studentList = FileUtilities.populateList("logs/studentDatabase", Student.class);
     }
 
     /**
@@ -26,38 +26,6 @@ public class Student extends Member implements Serializable {
     private Student() {
         super();
     }
-    private static void populateList() {
-        FileInputStream fileInputStream = null;
-        ObjectInputStream objectInputStream = null;
-        File studentFile = new File("logs/studentDatabase.txt");
-        try {
-            fileInputStream = new FileInputStream(studentFile);
-            objectInputStream = new ObjectInputStream(fileInputStream);
-
-        } catch (FileNotFoundException e) {
-            //File not found
-            try {
-                //Create a file and return no need to populate list
-                if(studentFile.createNewFile()) {
-                    return;
-                }
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-        } catch(EOFException e1) {
-            return; //EmptyFile
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        try {
-            studentList = (ArrayList<Integer>) Objects.requireNonNull(objectInputStream).readObject();
-        } catch (EOFException e) {
-            //End of stream
-        } catch (IOException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-
-    }
 
     /**
      * Initializes a student as a member of the gym, sets the trainer to unassigned trainer
@@ -65,8 +33,8 @@ public class Student extends Member implements Serializable {
      */
     public Student(int memberID) {
         super(memberID);
-        if(!studentList.contains(memberID)) {
-            studentList.add(memberID);
+        if(!studentList.contains(this)) {
+            studentList.add(this);
         }
     }
 
@@ -89,44 +57,31 @@ public class Student extends Member implements Serializable {
 
     /**
      * sets the time slots student will train in
-     * @param trainingTime the time slot the student will be training in
+     * @param startTrainingSlot the time slot the student will start training
+     * @param endTrainingSlot the time slot student will stop training
      * @param currentTrainer the trainer to be training with
      * @return  false - if trainer is unavailable
      *          true - if trainer is available
      */
-    public boolean setTimeSlot(TimeSlot trainingTime, Trainer currentTrainer) {
+    public boolean setTimeSlot(TimeSlot startTrainingSlot,
+                               TimeSlot endTrainingSlot, Trainer currentTrainer) {
         this.currentTrainer = currentTrainer;
-        if(!currentTrainer.timeSlotAvailable(trainingTime)) {
+        if(!currentTrainer.timeSlotAvailable(startTrainingSlot,endTrainingSlot)) {
             return false;
+        } else {
+            this.startTrainingSlot = startTrainingSlot;
+            this.endTrainingSlot = endTrainingSlot;
+            FileUtilities.saveList("logs/studentDatabase", studentList);
+            return true;
+
         }
-        this.trainingTime = trainingTime;
-        return true;
     }
 
-    /**
-     * retrieves the time slots student trains in
-     * @return the time slots student trains in
-     */
-    public TimeSlot getTimeSlot() {
-        return this.trainingTime;
+    public TimeSlot getStartTrainingSlot() {
+        return startTrainingSlot;
     }
 
-    /**
-     * Saves the students. If not called, students will be saved
-     * @return true if successful
-     */
-    public static boolean saveStudents() {
-        try {
-            FileOutputStream studentWriter = new FileOutputStream("logs/studentDatabase.txt", false);
-            ObjectOutputStream obj = new ObjectOutputStream(studentWriter);
-
-            // Write the entire studentList to the file
-            obj.writeObject(studentList);
-
-            obj.close();
-        } catch (IOException e) {
-            return false;
-        }
-        return true;
+    public TimeSlot getEndTrainingSlot() {
+        return endTrainingSlot;
     }
 }
