@@ -45,7 +45,7 @@ public class Trainer extends Member implements Serializable {
      */
     public boolean addAvailableTime(TrainingTimeSlot availableTime) {
         final int startHourAndMinute = 0;
-        TrainingTimeSlot fullDay = new TrainingTimeSlot(this, null, Day.UNDEFINED,
+        TrainingTimeSlot fullDay = new TrainingTimeSlot(this, this, Day.UNDEFINED,
                 0, 0, MINUTES_IN_DAYS);
         if(checkValidTimeSlot(availableTime,fullDay) && !hasOverlap(availableTime)) {
             this.availableTimes.add(availableTime);
@@ -116,7 +116,8 @@ public class Trainer extends Member implements Serializable {
                 ((double) bounds.getMinute() / MINUTES_IN_HOUR);
 
         final boolean bellowMinimumDuration =
-                trainingTimeSlot.getDurationInMinutes()<bounds.getTrainer().getMinimumSessionTime();
+                    trainingTimeSlot.getDurationInMinutes() < bounds.getTrainer().getMinimumSessionTime();
+
         final boolean schedulePastBounds =
                 (trainingTimeSlot.getEndHour() +
                         ((double) trainingTimeSlot.getEndMinute() / MINUTES_IN_HOUR)) > durationAvailable;

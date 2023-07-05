@@ -7,7 +7,6 @@ import java.util.Random;
 
 class StudentTest {
     private static Student student;
-    private static Trainer trainer;
     private static final Random rand = new Random();
     private static Member member1;
     private static Member member2;
@@ -28,7 +27,6 @@ class StudentTest {
         final int validTrainerID = member2.getMemberID();
         final int validMinimumStartTime = 15;
         student = new Student(validStudentID);
-        trainer = new Trainer(validTrainerID, validMinimumStartTime);
     }
     @org.junit.jupiter.api.AfterEach
     void tearDown() {

@@ -13,7 +13,6 @@ class MemberTest {
     private static Member member1;
     private static Member member2;
     private static int memberId1;
-    private static int memberId2;
     @org.junit.jupiter.api.BeforeEach
     void setUp() {
         String firstName = "firstName";
@@ -38,19 +37,6 @@ class MemberTest {
     void lookupMember() {
         Member testMember = Member.lookupMember(memberId1);
         assertEquals(testMember, member1);
-    }
-    @Test
-    void getAndSetFirstName() {
-        String testName = "Bob";
-        member1.setFirstName(testName);
-        assertEquals(member1.getFirstName(), testName);
-    }
-
-    @Test
-    void getAndSetLastName() {
-        String testName = "The Builder";
-        member1.setLastName(testName);
-        assertEquals(member1.getLastName(), testName);
     }
     @Test
     void getAndSetActiveMembership() {

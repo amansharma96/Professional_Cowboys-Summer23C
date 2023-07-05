@@ -63,7 +63,7 @@ I would also advise you to already fill out the Contributions section (End of sp
 ### Sprint Review
 Answer as a team!
 
-**Screen Cast link**: Your link
+**Screen Cast link**: [Your link](https://youtu.be/_F_MFUdLFkY)
 
 > Answer the following questions as a team. 
 
@@ -172,6 +172,7 @@ Answer as a team!
 
    - [link1] (https://github.com/amansharma96/Professional_Cowboys-Summer23C/pull/11/commits)
    - [link2] (https://github.com/amansharma96/Professional_Cowboys-Summer23C/pull/13/commits)
+   - [link3] (https://github.com/amansharma96/Professional_Cowboys-Summer23C/pull/17/commits)
 
    **GitHub links to your Unit Tests (up to 3 links) -- Sprint 2 and 3:
 
@@ -195,11 +196,10 @@ Answer as a team!
 #### Team member D -- Ryan Dinaro:
   **Links to GitHub commits with main code contribution (up to 5 links) - all Sprints:
   
-- [Pull #4](https://github.com/amansharma96/Professional_Cowboys-Summer23C/pull/4/commits)
-- [Pull #5](https://github.com/amansharma96/Professional_Cowboys-Summer23C/pull/5/commits)
-- [Pull #6](https://github.com/amansharma96/Professional_Cowboys-Summer23C/pull/6/commits)
-- [Pull #7](https://github.com/amansharma96/Professional_Cowboys-Summer23C/pull/7/commits)
-- [Pull #15](https://github.com/amansharma96/Professional_Cowboys-Summer23C/pull/15/commits)
+- [link1] (https://github.com/amansharma96/Professional_Cowboys-Summer23C/pull/4/commits)
+- [link2] (https://github.com/amansharma96/Professional_Cowboys-Summer23C/pull/5/commits)
+- [link3] (https://github.com/amansharma96/Professional_Cowboys-Summer23C/pull/6/commits)
+- [link4] (https://github.com/amansharma96/Professional_Cowboys-Summer23C/pull/7/commits)
 
    **GitHub links to your Unit Tests (up to 3 links) -- Sprint 2 and 3:
 
@@ -208,8 +208,8 @@ Answer as a team!
 
   **GitHub links to your Code Reviews (up to 3 links) -- Sprint 2 and 3:
 
-- [Code review #1](https://github.com/amansharma96/Professional_Cowboys-Summer23C/pull/9#pullrequestreview-1496167221)
-- [Code review #2](https://github.com/amansharma96/Professional_Cowboys-Summer23C/pull/18#pullrequestreview-1496178221)
+    - link1
+    - link2
 
   **How did you contribute to Static Analysis -- Sprint 3:
 

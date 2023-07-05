@@ -8,7 +8,7 @@ plugins {
   id 'jacoco'
 }
 
-mainClassName = 'main/java/memoranda/Start'
+mainClassName = 'memoranda/Start'
 
 compileJava.options.encoding = 'UTF-8'
 
@@ -29,13 +29,11 @@ sourceSets {
 }
 
 jacoco {
-  toolVersion = "0.8.8"
+  toolVersion = "0.8.9"
 }
 
 jacocoTestReport {
   reports {
-    xml.enabled false
-    csv.enabled false
     html.destination file("${buildDir}/jacocoHtml")
   }
   dependsOn test // this makes sure the test task is run before the report is generated
@@ -46,20 +44,13 @@ test {
   finalizedBy jacocoTestReport
 }
 
-
-
-
-
-
-
-
 // Get the current date and time as a string
 def now = LocalDateTime.now()
 def formatter = DateTimeFormatter.ofPattern("MM/dd/yy-HH:mm:ss")
 def timestamp = now.format(formatter)
 
 ext {
-  version = '1.2.2'
+  version = '1.3.0'
   build = timestamp
 }
 
