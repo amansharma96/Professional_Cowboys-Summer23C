@@ -27,7 +27,9 @@ public class MemberPanelInformation extends JPanel {
         setMinimumSize(dim);
         setPreferredSize(dim);
 
+
         memberTable.setPreferredSize(dim);
+        memberTable.setBackground(new Color(140,160,185));
 
 
         updateMemberListData();
