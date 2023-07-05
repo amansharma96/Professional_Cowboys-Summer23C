@@ -56,15 +56,22 @@ public class MemberPanelInformation extends JPanel {
         updateMemberListData();
         updateUI();
     }
+    public Member getMember(int rowHeld) {
+        int memberId = Integer.parseInt((String)memberTableModel.getValueAt(rowHeld,2));
+        return Member.lookupMember(memberId);
+    }
 
-    public Member getSelected() {
+    public int[] getSelected() {
         if(memberTable.getSelectedRow()>-1) {
-            return Member.getMemberList().get(memberTable.getSelectedRow());
+            return memberTable.getSelectedRows();
         } else {
             return null;
         }
     }
 
+    /**
+     * Removes the selected rows from the table
+     */
     public void removeSelected() {
         int[] selectedRows = memberTable.getSelectedRows();
         for(int i = selectedRows.length-1; i >= 0; i--){

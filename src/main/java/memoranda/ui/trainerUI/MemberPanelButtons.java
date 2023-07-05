@@ -33,16 +33,17 @@ public class MemberPanelButtons extends JPanel {
 
 
         addMember.addActionListener(e -> {
-            changeMember(null);
+            changeMember(new int[1]);
         });
 
         editMember.addActionListener(e -> {
-            Member selectedMember  = information.getSelected();
-            changeMember(selectedMember);
+            if(information.getSelected().length>0)
+                changeMember(information.getSelected());
         });
 
         removeMember.addActionListener(e -> {
-            removeSelectedMember(information.getSelected());
+            information.removeSelected();
+            information.updateComponent();
         });
 
         add(addMember);
@@ -55,32 +56,30 @@ public class MemberPanelButtons extends JPanel {
         updateUI();
     }
 
-    private void removeSelectedMember(Member selected) {
-        if(selected!=null) {
-            Member.removeMember(selected, Member.getMemberList(), Member.getFilePath());
-            Member.removeMember(selected, Student.getStudentList(), Student.getFilePath());
-            Member.removeMember(selected, Trainer.getTrainerList(), Trainer.getFilePath());
-            information.removeSelected();
-            information.updateComponent();
-        }
-    }
-
-    private void changeMember(Member selectedMember) {
+    private void changeMember(int[] selectedMemberIDs) {
         JFrame frame = new JFrame("Member Information");
         frame.setSize(300, 200);
         frame.setLayout(new GridLayout(4, 2));
 
+
+        Member defaultMember = information.getMember(selectedMemberIDs[0]);
         JLabel firstNameLabel = new JLabel("First Name: ");
         JTextField firstNameField = new JTextField();
-        if (selectedMember != null) firstNameField.setText(selectedMember.getFirstName());
+        if (defaultMember != null) {
+            firstNameField.setText(defaultMember.getFirstName());
+        }
 
         JLabel lastNameLabel = new JLabel("Last Name: ");
         JTextField lastNameField = new JTextField();
-        if (selectedMember != null) lastNameField.setText(selectedMember.getLastName());
+        if (defaultMember != null) {
+            lastNameField.setText(defaultMember.getLastName());
+        }
 
         JLabel membershipLabel = new JLabel("Membership: ");
         JComboBox<String> membershipBox = new JComboBox<>(new String[]{"Yes", "No"});
-        if (selectedMember != null) membershipBox.setSelectedItem(selectedMember.getActiveMembership() ? "Yes" : "No");
+        if (defaultMember != null) {
+            membershipBox.setSelectedItem(defaultMember.getActiveMembership() ? "Yes" : "No");
+        }
 
         JButton submitButton = new JButton("Submit");
         submitButton.addActionListener(e -> {
@@ -88,7 +87,7 @@ public class MemberPanelButtons extends JPanel {
             String lastName = lastNameField.getText();
             boolean isMember = Objects.equals(membershipBox.getSelectedItem(), "Yes");
             boolean flagDispose = true;
-            if(selectedMember==null) {
+            if(defaultMember==null) {
                 Member saveMember = null;
                 try {
                     saveMember = new Member(firstName,lastName);
@@ -100,7 +99,7 @@ public class MemberPanelButtons extends JPanel {
                     lastNameField.setText("Taken");
                 }
             } else {
-                selectedMember.updateInformation(firstName,lastName,isMember);
+                defaultMember.updateInformation(firstName,lastName,isMember);
                 information.updateComponent();
             }
 
