@@ -161,12 +161,16 @@ public class Member implements Serializable{
     }
 
     /**
-     * change the first name - allows for name changes
-     * @param firstName the desired first name
+     * Updates information to parameters
+     * @param firstName first name
+     * @param lastName last name
+     * @param activeMembership membership is active
      */
-    public void setFirstName(String firstName) {
+    public void updateInformation(String firstName, String lastName, boolean activeMembership) {
         this.firstName = firstName;
-        FileUtilities.saveList("logs/memberDatabase", memberList);
+        this.lastName = lastName;
+        this.activeMembership = activeMembership;
+        FileUtilities.saveList(FILE_PATH, memberList);
     }
 
     /**
@@ -175,15 +179,6 @@ public class Member implements Serializable{
      */
     public String getLastName() {
         return lastName;
-    }
-
-    /**
-     * change the last name - allows for name changes
-     * @param lastName the desired last name
-     */
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-        FileUtilities.saveList(FILE_PATH, memberList);
     }
 
     /**

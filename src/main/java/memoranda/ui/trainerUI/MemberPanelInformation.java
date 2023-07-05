@@ -9,8 +9,8 @@ import java.awt.*;
 public class MemberPanelInformation extends JPanel {
     private final JTable memberTable;
     private final DefaultTableModel memberTableModel;
-    private static final String[] tableHeaders = {"First Name", "Last Name", "Active Membership",
-            "MemberID", "Join Date"};
+    private static final String[] tableHeaders = {"First Name", "Last Name",
+            "MemberID", "Join Date","Active Membership"};
     public MemberPanelInformation() {
         super();
         memberTableModel = new DefaultTableModel(tableHeaders, 0) {
@@ -46,9 +46,9 @@ public class MemberPanelInformation extends JPanel {
             String[] row = new String[5];
             row[0] = member.getFirstName();
             row[1] = member.getLastName();
-            row[2] = (member.getActiveMembership()) ? "Yes" : "No";
+            row[4] = (member.getActiveMembership()) ? "Yes" : "No";
             row[3] = String.valueOf(member.getMemberID());
-            row[4] = member.getJoinDate();
+            row[2] = member.getJoinDate();
             memberTableModel.addRow(row);
         }
     }

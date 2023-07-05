@@ -16,6 +16,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
 
+import memoranda.ui.trainerUI.MemberPanel;
 import memoranda.util.Context;
 import memoranda.util.Local;
 
@@ -229,6 +230,7 @@ public class WorkPanel extends JPanel {
 		this.add(panel, BorderLayout.CENTER);
 		panel.add(dailyItemsPanel, "DAILYITEMS");
 		panel.add(filesPanel, "FILES");
+		panel.add(new MemberPanel(), "MEMBERS");
 		toolBar.add(agendaB, null);
 		toolBar.add(eventsB, null);
 		toolBar.add(tasksB, null);
@@ -248,10 +250,10 @@ public class WorkPanel extends JPanel {
 	}
 
 	private void studentTrainerRegB_actionPerformed(ActionEvent e) {
-		cardLayout1.show(panel, "FILES");
-		dailyItemsPanel.selectPanel("REGISTRATION");
+		cardLayout1.show(panel, "MEMBERS");
+		dailyItemsPanel.selectPanel("MEMBERS");
 		setCurrentButton(studentTrainerRegB);
-		Context.put("CURRENT_PANEL", "REGISTRATION");
+		Context.put("CURRENT_PANEL", "MEMBERS");
 	}
 
 	public void selectPanel(String pan) {
