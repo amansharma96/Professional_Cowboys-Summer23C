@@ -108,7 +108,7 @@ public class WorkPanel extends JPanel {
 		studentTrainerRegB.setContentAreaFilled(false);
 		studentTrainerRegB.setFocusPainted(false);
 		studentTrainerRegB.setHorizontalTextPosition(SwingConstants.CENTER);
-		studentTrainerRegB.setText(Local.getString("Trainers"));
+		studentTrainerRegB.setText(Local.getString("Members"));
 		studentTrainerRegB.setVerticalAlignment(SwingConstants.TOP);
 		studentTrainerRegB.setVerticalTextPosition(SwingConstants.BOTTOM);
 		studentTrainerRegB.addActionListener(new java.awt.event.ActionListener() {
