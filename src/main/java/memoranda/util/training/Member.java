@@ -135,7 +135,7 @@ public class Member implements Serializable{
      */
     public static <T> boolean removeMember(Member memberSearch, List<T> memberList, String savePath) {
         for(T member : memberList) {
-            if(((Member) member).getMemberID() == memberSearch.getMemberID()) {
+            if(memberSearch!=null&&((Member) member).getMemberID() == memberSearch.getMemberID()) {
                 memberList.remove(member);
                 FileUtilities.saveList(savePath, memberList);
                 return true;
