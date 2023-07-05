@@ -9,6 +9,7 @@ public class MemberPanel extends JPanel {
     public MemberPanel() {
         super();
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        setBackground(Color.WHITE);
         information = new MemberPanelInformation();
         add(Box.createVerticalStrut(10));
         buttons = new MemberPanelButtons(information);

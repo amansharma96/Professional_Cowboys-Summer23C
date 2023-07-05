@@ -20,6 +20,7 @@ public class MemberPanelButtons extends JPanel {
         addButtons();
         add(Box.createHorizontalGlue());
         setFocusable(false);
+        setBackground(Color.WHITE);
     }
     private void addButtons() {
         final String[] buttons = {"New Member", "Edit Member", "Remove Member"};

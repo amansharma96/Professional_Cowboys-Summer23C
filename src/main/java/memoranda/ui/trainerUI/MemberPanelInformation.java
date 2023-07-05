@@ -29,7 +29,7 @@ public class MemberPanelInformation extends JPanel {
 
 
         memberTable.setPreferredSize(dim);
-        memberTable.setBackground(new Color(140,160,185));
+        setBackground(Color.WHITE);
 
 
         updateMemberListData();
