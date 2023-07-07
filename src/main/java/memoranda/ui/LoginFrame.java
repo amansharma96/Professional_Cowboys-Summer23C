@@ -1,7 +1,7 @@
 package memoranda.ui;
 
-import memoranda.AuthenticationService.AuthenticationServer;
-import memoranda.AuthenticationService.LoginReturns;
+import memoranda.util.authenticationservice.AuthenticationServer;
+import memoranda.util.authenticationservice.LoginReturns;
 import memoranda.CurrentProject;
 import memoranda.Project;
 import memoranda.ProjectManager;

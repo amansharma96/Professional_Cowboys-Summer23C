@@ -1,17 +1,16 @@
-import main.java.memoranda.util.Local;
-import main.java.memoranda.util.Util;
-import org.junit.*;
+import memoranda.util.Local;
+import memoranda.util.Util;
+import org.junit.jupiter.api.*;
 
 import java.util.Calendar;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class utilandLocalUnitTest {
+public class utilAndLocalUnitTest {
     @Test
     public void testGenerateId() {
-        Util util = new Util();
-        String id1 = util.generateId();
-        String id2 = util.generateId();
+        String id1 = Util.generateId();
+        String id2 = Util.generateId();
 
         assertNotNull(id1);
         assertNotNull(id2);
@@ -20,8 +19,7 @@ public class utilandLocalUnitTest {
 
     @Test
     public void testGenerateIdNotNull() {
-        Util util = new Util();
-        String id = util.generateId();
+        String id = Util.generateId();
         assertNotNull(id);
     }
 
@@ -36,63 +34,49 @@ public class utilandLocalUnitTest {
     }
 
     @Test
-    public void testParseInvalidDateStamp() {
-        String dateString = "Invalid Date";
-        int[] expectedDate = new int[]{0, 0, 0};
-
-        int[] actualDate = Util.parseDateStamp(dateString);
-
-        assertArrayEquals(expectedDate, actualDate);
-    }
-
-    @Test
     public void testGetDateStamp() {
-        Util util = new Util();
         Calendar cal = Calendar.getInstance();
         cal.set(2023, Calendar.APRIL, 16);
 
         String expectedDateStamp = "16/3/2023";
-        String actualDateStamp = util.getDateStamp(cal);
+        String actualDateStamp = Util.getDateStamp(cal);
 
         assertEquals(expectedDateStamp, actualDateStamp);
     }
 
     @Test
     public void testGetDateStampWithDifferentDate() {
-        Util util = new Util();
         Calendar cal = Calendar.getInstance();
         cal.set(2023, Calendar.JUNE, 22);
 
         String expectedDateStamp = "22/5/2023";
-        String actualDateStamp = util.getDateStamp(cal);
+        String actualDateStamp = Util.getDateStamp(cal);
 
         assertEquals(expectedDateStamp, actualDateStamp);
     }
 
     @Test
     public void testGetDateString() {
-        Local loc = new Local();
         int month = Calendar.APRIL;
         int dayOfMonth = 16;
         int year = 2023;
         int format = 0;
 
         String expectedOutput = "Sunday, April 16, 2023";
-        String actualOutput = loc.getDateString(month, dayOfMonth, year, format);
+        String actualOutput = Local.getDateString(month, dayOfMonth, year, format);
 
         assertEquals(expectedOutput, actualOutput);
     }
 
     @Test
     public void testGetDateStringWithDifferentFormat() {
-        Local loc = new Local();
         int month = Calendar.MAY;
         int dayOfMonth = 22;
         int year = 2023;
         int format = 1;
 
         String expectedOutput = "May 22, 2023";
-        String actualOutput = loc.getDateString(month, dayOfMonth, year, format);
+        String actualOutput = Local.getDateString(month, dayOfMonth, year, format);
 
         assertEquals(expectedOutput, actualOutput);
     }

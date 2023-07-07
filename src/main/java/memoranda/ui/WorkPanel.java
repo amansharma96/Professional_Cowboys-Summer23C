@@ -16,6 +16,7 @@ import javax.swing.SwingConstants;
 import javax.swing.border.BevelBorder;
 import javax.swing.border.Border;
 
+import memoranda.ui.trainerUI.MemberPanel;
 import memoranda.util.Context;
 import memoranda.util.Local;
 
@@ -32,8 +33,10 @@ public class WorkPanel extends JPanel {
 	CardLayout cardLayout1 = new CardLayout();
 
 	public JButton notesB = new JButton();
+	public JButton studentTrainerRegB = new JButton();
 	public DailyItemsPanel dailyItemsPanel = new DailyItemsPanel(this);
 	public ResourcesPanel filesPanel = new ResourcesPanel();
+	public MemberPanel memberPanel = new MemberPanel();
 	public JButton agendaB = new JButton();
 	public JButton tasksB = new JButton();
 	public JButton eventsB = new JButton();
@@ -93,6 +96,34 @@ public class WorkPanel extends JPanel {
 		agendaB.setOpaque(false);
 		agendaB.setMargin(new Insets(0, 0, 0, 0));
 		agendaB.setSelected(true);
+
+		//==========================================
+		studentTrainerRegB.setBackground(Color.white);
+		studentTrainerRegB.setMaximumSize(new Dimension(60, 80));
+		studentTrainerRegB.setMinimumSize(new Dimension(30, 30));
+
+		studentTrainerRegB.setFont(new java.awt.Font("Dialog", 1, 10));
+		studentTrainerRegB.setPreferredSize(new Dimension(50, 50));
+		studentTrainerRegB.setBorderPainted(false);
+		studentTrainerRegB.setContentAreaFilled(false);
+		studentTrainerRegB.setFocusPainted(false);
+		studentTrainerRegB.setHorizontalTextPosition(SwingConstants.CENTER);
+		studentTrainerRegB.setText(Local.getString("Members"));
+		studentTrainerRegB.setVerticalAlignment(SwingConstants.TOP);
+		studentTrainerRegB.setVerticalTextPosition(SwingConstants.BOTTOM);
+		studentTrainerRegB.addActionListener(new java.awt.event.ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				studentTrainerRegB_actionPerformed(e);
+			}
+		});
+		studentTrainerRegB.setIcon(
+				new ImageIcon(
+						memoranda.ui.AppFrame.class.getResource(
+								"/ui/icons/Student and Trainer.png")));
+		studentTrainerRegB.setOpaque(false);
+		studentTrainerRegB.setMargin(new Insets(0, 0, 0, 0));
+		studentTrainerRegB.setSelected(true);
+		//==========================================================
 
 		eventsB.setBackground(Color.white);
 		eventsB.setMaximumSize(new Dimension(60, 80));
@@ -200,11 +231,13 @@ public class WorkPanel extends JPanel {
 		this.add(panel, BorderLayout.CENTER);
 		panel.add(dailyItemsPanel, "DAILYITEMS");
 		panel.add(filesPanel, "FILES");
+		panel.add(memberPanel, "MEMBERS");
 		toolBar.add(agendaB, null);
 		toolBar.add(eventsB, null);
 		toolBar.add(tasksB, null);
 		toolBar.add(notesB, null);
 		toolBar.add(filesB, null);
+		toolBar.add(studentTrainerRegB, null);
 		currentB = agendaB;
 		// Default blue color
 		currentB.setBackground(new Color(215, 225, 250));
@@ -217,6 +250,13 @@ public class WorkPanel extends JPanel {
 
 	}
 
+	private void studentTrainerRegB_actionPerformed(ActionEvent e) {
+		cardLayout1.show(panel, "MEMBERS");
+		dailyItemsPanel.selectPanel("MEMBERS");
+		setCurrentButton(studentTrainerRegB);
+		Context.put("CURRENT_PANEL", "MEMBERS");
+	}
+
 	public void selectPanel(String pan) {
 		if (pan != null) {
 			if (pan.equals("NOTES"))
@@ -227,6 +267,8 @@ public class WorkPanel extends JPanel {
 				eventsB_actionPerformed(null);
 			else if (pan.equals("FILES"))
 				filesB_actionPerformed(null);
+			else if (pan.equals("REGISTRATION"))
+				studentTrainerRegB_actionPerformed(null);
 		}
 	}
 
