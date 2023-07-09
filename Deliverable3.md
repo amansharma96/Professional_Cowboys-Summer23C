@@ -196,25 +196,23 @@ Answer as a team!
 #### Team member D -- Ryan Dinaro:
   **Links to GitHub commits with main code contribution (up to 5 links) - all Sprints:
   
-- [link1] (https://github.com/amansharma96/Professional_Cowboys-Summer23C/pull/4/commits)
-- [link2] (https://github.com/amansharma96/Professional_Cowboys-Summer23C/pull/5/commits)
-- [link3] (https://github.com/amansharma96/Professional_Cowboys-Summer23C/pull/6/commits)
-- [link4] (https://github.com/amansharma96/Professional_Cowboys-Summer23C/pull/7/commits)
+- [Add version and build information upon build](https://github.com/amansharma96/Professional_Cowboys-Summer23C/pull/4/commits)
+- [Add UML Diagram for better understanding of software](https://github.com/amansharma96/Professional_Cowboys-Summer23C/pull/5/commits)
+- [Repair Minimize button (and close)](https://github.com/amansharma96/Professional_Cowboys-Summer23C/pull/6/commits)
+- [Add a data safe login system](https://github.com/amansharma96/Professional_Cowboys-Summer23C/pull/15/commits)
+- [Implement a member system](https://github.com/amansharma96/Professional_Cowboys-Summer23C/pull/20)
 
    **GitHub links to your Unit Tests (up to 3 links) -- Sprint 2 and 3:
 
-    - link1
-    - link2
+    - [Member test](https://github.com/amansharma96/Professional_Cowboys-Summer23C/blob/master/src/test/java/memoranda/util/training/MemberTest.java)
+    - [Student test](https://github.com/amansharma96/Professional_Cowboys-Summer23C/blob/master/src/test/java/memoranda/util/training/StudentTest.java)
+    - [Trainer test](https://github.com/amansharma96/Professional_Cowboys-Summer23C/blob/master/src/test/java/memoranda/util/training/TrainerTest.java)
 
   **GitHub links to your Code Reviews (up to 3 links) -- Sprint 2 and 3:
 
-    - link1
-    - link2
+    - [Code review](https://github.com/amansharma96/Professional_Cowboys-Summer23C/pull/18)
 
   **How did you contribute to Static Analysis -- Sprint 3:
-
-    - link1
-    - link2
  
  **What was your main contribution to the Quality Policy documentation?:
    Unfortunately, I worked through that meeting
